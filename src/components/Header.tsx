@@ -33,8 +33,8 @@ const Header: React.FC<HeaderProps> = ({ onAdminClick }) => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-sm">
-              <span className="text-white font-bold text-lg">📝</span>
+            <div className="w-10 h-10 bg-white border-2 border-orange-300 rounded-2xl flex items-center justify-center shadow-sm">
+              <Heart className="w-6 h-6 text-orange-400 fill-current" />
             </div>
             <h1 className="text-xl font-bold text-black hidden sm:block">
               かんじょうにっき掲示板
