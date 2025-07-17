@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react'
-import { User, Session } from '@supabase/supabase-js'
-import { supabase } from '../lib/supabase'
 
 export interface Profile {
   id: string
@@ -12,91 +10,39 @@ export interface Profile {
 }
 
 export const useAuth = () => {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<any>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
-  const [session, setSession] = useState<Session | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [session, setSession] = useState<any>(null)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-      setUser(session?.user ?? null)
-      if (session?.user) {
-        fetchProfile(session.user.id)
-      }
-      setLoading(false)
-    })
+    // 認証なしでダミーユーザーを設定
+    const dummyUser = {
+      id: 'anonymous-user',
+      email: 'anonymous@example.com'
+    }
+    
+    const dummyProfile = {
+      id: 'anonymous-user',
+      email: 'anonymous@example.com',
+      display_name: '匿名ユーザー',
+      avatar_url: null,
+      is_admin: false,
+      created_at: new Date().toISOString()
+    }
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setSession(session)
-        setUser(session?.user ?? null)
-        
-        if (session?.user) {
-          await fetchProfile(session.user.id)
-        } else {
-          setProfile(null)
-        }
-        setLoading(false)
-      }
-    )
-
-    return () => subscription.unsubscribe()
+    setUser(dummyUser)
+    setProfile(dummyProfile)
+    setSession({ user: dummyUser })
+    setLoading(false)
   }, [])
 
-  const fetchProfile = async (userId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single()
-
-      if (error && error.code === 'PGRST116') {
-        // Profile doesn't exist, create one
-        const { data: userData } = await supabase.auth.getUser()
-        if (userData.user) {
-          const newProfile = {
-            id: userId,
-            email: userData.user.email,
-            display_name: userData.user.user_metadata?.full_name || userData.user.email?.split('@')[0],
-            avatar_url: userData.user.user_metadata?.avatar_url,
-            is_admin: false
-          }
-          
-          const { data: createdProfile, error: createError } = await supabase
-            .from('profiles')
-            .insert([newProfile])
-            .select()
-            .single()
-
-          if (!createError) {
-            setProfile(createdProfile)
-          }
-        }
-      } else if (!error) {
-        setProfile(data)
-      }
-    } catch (error) {
-      console.error('Error fetching profile:', error)
-    }
-  }
-
   const signInWithGoogle = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: window.location.origin
-      }
-    })
-    if (error) throw error
+    // 何もしない（削除済み）
   }
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut()
-    if (error) throw error
+    // 何もしない（削除済み）
   }
 
   return {

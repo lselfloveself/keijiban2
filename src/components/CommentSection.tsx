@@ -118,63 +118,55 @@ const CommentSection: React.FC<CommentSectionProps> = ({ diaryId }) => {
       </div>
 
       {/* Add Comment Form */}
-      {user ? (
-        <form onSubmit={handleSubmit} className="border-t border-gray-100 pt-4 bg-gray-50 rounded-lg p-4 mt-4">
-          <div className="flex space-x-3">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-white to-gray-50 border border-gray-200 flex items-center justify-center flex-shrink-0 shadow-sm hover:shadow-md transition-all duration-200">
-              <ElegantHeart className={getRandomHeartColor()} size="sm" />
-            </div>
-            <div className="flex-1">
-              <textarea
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                placeholder="コメントを書く..."
-                className="w-full p-3 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-sm placeholder-gray-500"
-                rows={2}
-                maxLength={280}
-              />
+      <form onSubmit={handleSubmit} className="border-t border-gray-100 pt-4 bg-gray-50 rounded-lg p-4 mt-4">
+        <div className="flex space-x-3">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-white to-gray-50 border border-gray-200 flex items-center justify-center flex-shrink-0 shadow-sm hover:shadow-md transition-all duration-200">
+            <ElegantHeart className={getRandomHeartColor()} size="sm" />
+          </div>
+          <div className="flex-1">
+            <textarea
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder="コメントを書く..."
+              className="w-full p-3 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-sm placeholder-gray-500"
+              rows={2}
+              maxLength={280}
+            />
+            
+            <div className="flex items-center justify-between mt-3">
+              <label className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={isAnonymous}
+                  onChange={(e) => setIsAnonymous(e.target.checked)}
+                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                />
+                <span className="text-sm text-gray-600">匿名でコメント</span>
+              </label>
               
-              <div className="flex items-center justify-between mt-3">
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    checked={isAnonymous}
-                    onChange={(e) => setIsAnonymous(e.target.checked)}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <span className="text-sm text-gray-600">匿名でコメント</span>
-                </label>
-                
-                <div className="flex items-center space-x-3">
-                  <span className="text-sm text-gray-500">
-                    {280 - newComment.length}
-                  </span>
-                  <button
-                    type="submit"
-                    disabled={!newComment.trim() || isSubmitting}
-                    className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-                  >
-                    {isSubmitting ? (
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                      <>
-                        <Send className="w-3 h-3 mr-1" />
-                        返信
-                      </>
-                    )}
-                  </button>
-                </div>
+              <div className="flex items-center space-x-3">
+                <span className="text-sm text-gray-500">
+                  {280 - newComment.length}
+                </span>
+                <button
+                  type="submit"
+                  disabled={!newComment.trim() || isSubmitting}
+                  className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                >
+                  {isSubmitting ? (
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      <Send className="w-3 h-3 mr-1" />
+                      返信
+                    </>
+                  )}
+                </button>
               </div>
             </div>
           </div>
-        </form>
-      ) : (
-        <div className="text-center py-6 border-t border-gray-100 bg-gray-50 rounded-lg mt-4">
-          <p className="text-gray-500">
-            返信するにはログインしてください
-          </p>
         </div>
-      )}
+      </form>
     </div>
   )
 }

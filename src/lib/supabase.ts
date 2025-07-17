@@ -1,9 +1,27 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://your-project.supabase.co'
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'your-anon-key'
+// Supabase設定（認証機能は削除済み）
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://dummy.supabase.co'
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'dummy-key'
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+// 認証なしのダミークライアント
+export const supabase = {
+  from: (table: string) => ({
+    select: () => ({ data: [], error: null }),
+    insert: () => ({ data: null, error: null }),
+    update: () => ({ data: null, error: null }),
+    delete: () => ({ data: null, error: null }),
+    eq: () => ({ data: [], error: null }),
+    order: () => ({ data: [], error: null })
+  }),
+  auth: {
+    getSession: () => Promise.resolve({ data: { session: null } }),
+    getUser: () => Promise.resolve({ data: { user: null } }),
+    onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
+    signInWithOAuth: () => Promise.resolve({ error: null }),
+    signOut: () => Promise.resolve({ error: null })
+  }
+}
 
 export type Database = {
   public: {
