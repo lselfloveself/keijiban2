@@ -16,33 +16,8 @@ interface DiaryCardProps {
   onUpdate?: (id: string, updates: Partial<DiaryEntry>) => void
 }
 
-// スクリーンショット参考のパステルカラー配列
-const pastelColors = [
-  'bg-purple-50 border-purple-200',  // 恐怖 - 紫
-  'bg-blue-50 border-blue-200',      // 悲しみ - 青
-  'bg-red-50 border-red-200',        // 怒り - 赤
-  'bg-green-50 border-green-200',    // 嫌悪 - 緑
-  'bg-gray-50 border-gray-200',      // 無関心感 - グレー
-  'bg-orange-50 border-orange-200',  // 罪悪感 - オレンジ
-  'bg-indigo-50 border-indigo-200',  // 寂しさ - インディゴ
-  'bg-pink-50 border-pink-200',      // 恥ずかしさ - ピンク
-]
-
-// 投稿IDに基づいて一貫した色を選択する関数
-const getPostColor = (postId: string): string => {
-  // 投稿IDのハッシュ値を計算して色を決定
-  let hash = 0
-  for (let i = 0; i < postId.length; i++) {
-    const char = postId.charCodeAt(i)
-    hash = ((hash << 5) - hash) + char
-    hash = hash & hash // 32bit整数に変換
-  }
-  const index = Math.abs(hash) % pastelColors.length
-  return pastelColors[index]
-}
-
-// 投稿IDに基づいて背景色とボーダー色を取得
-const getPostColorClasses = (postId: string) => {
+// スクリーンショット参考のパステルカラー配列（8色）
+const getRandomPostColorClasses = () => {
   const colors = [
     { bg: 'bg-purple-50', border: 'border-purple-200' },    // 恐怖 - 紫
     { bg: 'bg-blue-50', border: 'border-blue-200' },        // 悲しみ - 青
@@ -54,13 +29,8 @@ const getPostColorClasses = (postId: string) => {
     { bg: 'bg-pink-50', border: 'border-pink-200' },        // 恥ずかしさ - ピンク
   ]
   
-  let hash = 0
-  for (let i = 0; i < postId.length; i++) {
-    const char = postId.charCodeAt(i)
-    hash = ((hash << 5) - hash) + char
-    hash = hash & hash
-  }
-  const index = Math.abs(hash) % colors.length
+  // ランダムに色を選択
+  const index = Math.floor(Math.random() * colors.length)
   return colors[index]
 }
 const DiaryCard: React.FC<DiaryCardProps> = ({ 
@@ -74,11 +44,11 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
   const [showMenu, setShowMenu] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
   const [liked, setLiked] = useState(false)
+  const [postColors] = useState(() => getRandomPostColorClasses()) // 初回レンダリング時に色を決定
 
   const isOwner = currentUserId === diary.user_id
   const canEdit = isOwner || isAdmin
   const canDelete = isOwner || isAdmin
-  const postColors = getPostColorClasses(diary.id)
 
   const getEmotionColor = (emotion: string | null) => {
     const colors: Record<string, string> = {
