@@ -1,11 +1,28 @@
 import React, { useState, useEffect } from 'react'
-import { Send, User } from 'lucide-react'
+import { Send, Heart } from 'lucide-react'
 import { supabase, Database } from '../lib/supabase'
 import { useAuth } from '../hooks/useAuth'
 import { formatDistanceToNow } from 'date-fns'
 import { ja } from 'date-fns/locale'
 
 type Comment = Database['public']['Tables']['comments']['Row']
+
+// ランダムなハートカラーを取得
+const getRandomHeartColor = () => {
+  const colors = [
+    'text-purple-500',
+    'text-blue-500', 
+    'text-red-500',
+    'text-green-500',
+    'text-gray-500',
+    'text-orange-500',
+    'text-indigo-500',
+    'text-pink-500'
+  ]
+  
+  const index = Math.floor(Math.random() * colors.length)
+  return colors[index]
+}
 
 interface CommentSectionProps {
   diaryId: string
@@ -71,9 +88,9 @@ const CommentSection: React.FC<CommentSectionProps> = ({ diaryId }) => {
       {/* Comments List */}
       <div className="space-y-4">
         {comments.map((comment) => (
-          <div key={comment.id} className="flex space-x-3">
-            <div className="avatar-sm flex-shrink-0">
-              <User className="w-3 h-3" />
+          <div key={comment.id} className="flex space-x-3" data-heart-color={getRandomHeartColor()}>
+            <div className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center flex-shrink-0 shadow-sm">
+              <Heart className={`w-3 h-3 ${getRandomHeartColor()} fill-current`} />
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center space-x-2">
@@ -103,8 +120,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({ diaryId }) => {
       {user ? (
         <form onSubmit={handleSubmit} className="border-t border-gray-100 pt-4 bg-gray-50 rounded-lg p-4 mt-4">
           <div className="flex space-x-3">
-            <div className="avatar-sm flex-shrink-0">
-              <User className="w-3 h-3" />
+            <div className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center flex-shrink-0 shadow-sm">
+              <Heart className={`w-3 h-3 ${getRandomHeartColor()} fill-current`} />
             </div>
             <div className="flex-1">
               <textarea

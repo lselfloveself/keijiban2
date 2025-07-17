@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Heart, MessageCircle, MoreHorizontal, Edit, Trash2, User, Share } from 'lucide-react'
+import { Heart, MessageCircle, MoreHorizontal, Edit, Trash2, Share } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { ja } from 'date-fns/locale'
 import { Database } from '../lib/supabase'
@@ -17,16 +17,48 @@ interface DiaryCardProps {
 }
 
 // スクリーンショット参考のパステルカラー配列（8色）
-const getRandomPostColorClasses = () => {
+const getRandomColorClasses = () => {
   const colors = [
-    { bg: 'bg-purple-50', border: 'border-purple-200' },    // 恐怖 - 紫
-    { bg: 'bg-blue-50', border: 'border-blue-200' },        // 悲しみ - 青
-    { bg: 'bg-red-50', border: 'border-red-200' },          // 怒り - 赤
-    { bg: 'bg-green-50', border: 'border-green-200' },      // 嫌悪 - 緑
-    { bg: 'bg-gray-50', border: 'border-gray-200' },        // 無関心感 - グレー
-    { bg: 'bg-orange-50', border: 'border-orange-200' },    // 罪悪感 - オレンジ
-    { bg: 'bg-indigo-50', border: 'border-indigo-200' },    // 寂しさ - インディゴ
-    { bg: 'bg-pink-50', border: 'border-pink-200' },        // 恥ずかしさ - ピンク
+    { 
+      bg: 'bg-purple-50', 
+      border: 'border-purple-200',
+      heart: 'text-purple-500'
+    },
+    { 
+      bg: 'bg-blue-50', 
+      border: 'border-blue-200',
+      heart: 'text-blue-500'
+    },
+    { 
+      bg: 'bg-red-50', 
+      border: 'border-red-200',
+      heart: 'text-red-500'
+    },
+    { 
+      bg: 'bg-green-50', 
+      border: 'border-green-200',
+      heart: 'text-green-500'
+    },
+    { 
+      bg: 'bg-gray-50', 
+      border: 'border-gray-200',
+      heart: 'text-gray-500'
+    },
+    { 
+      bg: 'bg-orange-50', 
+      border: 'border-orange-200',
+      heart: 'text-orange-500'
+    },
+    { 
+      bg: 'bg-indigo-50', 
+      border: 'border-indigo-200',
+      heart: 'text-indigo-500'
+    },
+    { 
+      bg: 'bg-pink-50', 
+      border: 'border-pink-200',
+      heart: 'text-pink-500'
+    }
   ]
   
   // ランダムに色を選択
@@ -44,7 +76,7 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
   const [showMenu, setShowMenu] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
   const [liked, setLiked] = useState(false)
-  const [postColors] = useState(() => getRandomPostColorClasses()) // 初回レンダリング時に色を決定
+  const [colors] = useState(() => getRandomColorClasses()) // 初回レンダリング時に色を決定
 
   const isOwner = currentUserId === diary.user_id
   const canEdit = isOwner || isAdmin
@@ -93,11 +125,11 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
   }
 
   return (
-    <article className={`rounded-2xl border-2 p-6 mb-4 hover:shadow-lg transition-all duration-200 transform hover:scale-[1.02] ${postColors.bg} ${postColors.border}`}>
+    <article className={`rounded-2xl border-2 p-6 mb-4 hover:shadow-lg transition-all duration-200 transform hover:scale-[1.02] ${colors.bg} ${colors.border}`}>
       {/* Header */}
       <div className="flex items-start space-x-3">
-        <div className="avatar-sm flex-shrink-0">
-          <User className="w-4 h-4" />
+        <div className="w-10 h-10 rounded-full bg-white border-2 border-gray-200 flex items-center justify-center flex-shrink-0 shadow-sm">
+          <Heart className={`w-5 h-5 ${colors.heart} fill-current`} />
         </div>
         
         <div className="flex-1 min-w-0">

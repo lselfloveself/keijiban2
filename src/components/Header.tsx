@@ -1,6 +1,23 @@
 import React, { useState } from 'react'
-import { LogIn, LogOut, User, Shield, Settings, Menu, X } from 'lucide-react'
+import { LogIn, LogOut, Heart, Shield, Settings, Menu, X } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
+
+// ランダムなハートカラーを取得
+const getRandomHeartColor = () => {
+  const colors = [
+    'text-purple-500',
+    'text-blue-500', 
+    'text-red-500',
+    'text-green-500',
+    'text-gray-500',
+    'text-orange-500',
+    'text-indigo-500',
+    'text-pink-500'
+  ]
+  
+  const index = Math.floor(Math.random() * colors.length)
+  return colors[index]
+}
 
 interface HeaderProps {
   onAdminClick?: () => void
@@ -32,8 +49,8 @@ const Header: React.FC<HeaderProps> = ({ onAdminClick }) => {
             {user ? (
               <>
                 <div className="flex items-center space-x-3 bg-gray-50 rounded-xl px-4 py-2">
-                  <div className="avatar">
-                    <User className="w-5 h-5" />
+                  <div className="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center shadow-sm">
+                    <Heart className={`w-4 h-4 ${getRandomHeartColor()} fill-current`} />
                   </div>
                   <div>
                     <div className="flex items-center space-x-1">
@@ -100,8 +117,8 @@ const Header: React.FC<HeaderProps> = ({ onAdminClick }) => {
             {user ? (
               <div className="space-y-4 px-4">
                 <div className="flex items-center space-x-3 px-4">
-                  <div className="avatar">
-                    <User className="w-5 h-5" />
+                  <div className="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center shadow-sm">
+                    <Heart className={`w-4 h-4 ${getRandomHeartColor()} fill-current`} />
                   </div>
                   <div>
                     <div className="flex items-center space-x-1">

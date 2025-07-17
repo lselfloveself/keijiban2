@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { 
-  Users, 
+  Heart, 
   FileText, 
   Trash2, 
   Ban, 
@@ -16,6 +16,23 @@ import { supabase, Database } from '../lib/supabase'
 import { useAuth } from '../hooks/useAuth'
 import { formatDistanceToNow } from 'date-fns'
 import { ja } from 'date-fns/locale'
+
+// ランダムなハートカラーを取得
+const getRandomHeartColor = () => {
+  const colors = [
+    'text-purple-500',
+    'text-blue-500', 
+    'text-red-500',
+    'text-green-500',
+    'text-gray-500',
+    'text-orange-500',
+    'text-indigo-500',
+    'text-pink-500'
+  ]
+  
+  const index = Math.floor(Math.random() * colors.length)
+  return colors[index]
+}
 
 type Profile = Database['public']['Tables']['profiles']['Row']
 type DiaryEntry = Database['public']['Tables']['diary']['Row']
@@ -233,8 +250,8 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onClose }) => {
               {filteredUsers.map((user) => (
                 <div key={user.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
                   <div className="flex items-center space-x-3">
-                    <div className="avatar">
-                      <Users className="w-5 h-5 text-gray-600" />
+                    <div className="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center shadow-sm">
+                      <Heart className={`w-4 h-4 ${getRandomHeartColor()} fill-current`} />
                     </div>
                     <div>
                       <div className="flex items-center space-x-2">
