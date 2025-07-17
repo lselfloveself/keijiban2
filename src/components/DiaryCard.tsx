@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { Heart, MessageCircle, MoreHorizontal, Edit, Trash2, Share } from 'lucide-react'
+import { MessageCircle, MoreHorizontal, Edit, Trash2, Share } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { ja } from 'date-fns/locale'
 import { Database } from '../lib/supabase'
 import CommentSection from './CommentSection'
 import EditDiaryModal from './EditDiaryModal'
+import ElegantHeart from './ElegantHeart'
 
 type DiaryEntry = Database['public']['Tables']['diary']['Row']
 
@@ -128,8 +129,8 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
     <article className={`rounded-2xl border-2 p-6 mb-4 hover:shadow-lg transition-all duration-200 transform hover:scale-[1.02] ${colors.bg} ${colors.border}`}>
       {/* Header */}
       <div className="flex items-start space-x-3">
-        <div className="w-10 h-10 rounded-full bg-white border-2 border-gray-200 flex items-center justify-center flex-shrink-0 shadow-sm">
-          <Heart className={`w-5 h-5 ${colors.heart} fill-current`} />
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-white to-gray-50 border-2 border-gray-200 flex items-center justify-center flex-shrink-0 shadow-md hover:shadow-lg transition-all duration-200">
+          <ElegantHeart className={colors.heart} size="md" />
         </div>
         
         <div className="flex-1 min-w-0">
@@ -184,7 +185,10 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
                   : 'text-gray-500 hover:text-red-500 hover:bg-red-50'
               }`}
             >
-              <Heart className={`w-4 h-4 ${liked ? 'fill-current' : ''}`} />
+              <ElegantHeart 
+                className={liked ? 'text-red-500' : 'text-gray-500'} 
+                size="sm" 
+              />
               <span>いいね</span>
             </button>
             

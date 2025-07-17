@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { 
-  Heart, 
   FileText, 
   Trash2, 
   Ban, 
@@ -10,12 +9,14 @@ import {
   Filter,
   X,
   Shield,
-  AlertTriangle
+  AlertTriangle,
+  Users
 } from 'lucide-react'
 import { supabase, Database } from '../lib/supabase'
 import { useAuth } from '../hooks/useAuth'
 import { formatDistanceToNow } from 'date-fns'
 import { ja } from 'date-fns/locale'
+import ElegantHeart from './ElegantHeart'
 
 // ランダムなハートカラーを取得
 const getRandomHeartColor = () => {
@@ -250,8 +251,8 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onClose }) => {
               {filteredUsers.map((user) => (
                 <div key={user.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center shadow-sm">
-                      <Heart className={`w-4 h-4 ${getRandomHeartColor()} fill-current`} />
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-white to-gray-50 border border-gray-200 flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-200">
+                      <ElegantHeart className={getRandomHeartColor()} size="md" />
                     </div>
                     <div>
                       <div className="flex items-center space-x-2">
