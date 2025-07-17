@@ -16,6 +16,30 @@ interface DiaryCardProps {
   onUpdate?: (id: string, updates: Partial<DiaryEntry>) => void
 }
 
+// スクリーンショット参考のパステルカラー配列
+const pastelColors = [
+  'bg-purple-50 border-purple-200',  // 恐怖 - 紫
+  'bg-blue-50 border-blue-200',      // 悲しみ - 青
+  'bg-red-50 border-red-200',        // 怒り - 赤
+  'bg-green-50 border-green-200',    // 嫌悪 - 緑
+  'bg-gray-50 border-gray-200',      // 無関心感 - グレー
+  'bg-orange-50 border-orange-200',  // 罪悪感 - オレンジ
+  'bg-indigo-50 border-indigo-200',  // 寂しさ - インディゴ
+  'bg-pink-50 border-pink-200',      // 恥ずかしさ - ピンク
+]
+
+// 投稿IDに基づいて一貫した色を選択する関数
+const getPostColor = (postId: string): string => {
+  // 投稿IDのハッシュ値を計算して色を決定
+  let hash = 0
+  for (let i = 0; i < postId.length; i++) {
+    const char = postId.charCodeAt(i)
+    hash = ((hash << 5) - hash) + char
+    hash = hash & hash // 32bit整数に変換
+  }
+  const index = Math.abs(hash) % pastelColors.length
+  return pastelColors[index]
+}
 const DiaryCard: React.FC<DiaryCardProps> = ({ 
   diary, 
   currentUserId, 
@@ -31,6 +55,7 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
   const isOwner = currentUserId === diary.user_id
   const canEdit = isOwner || isAdmin
   const canDelete = isOwner || isAdmin
+  const postColorClass = getPostColor(diary.id)
 
   const getEmotionColor = (emotion: string | null) => {
     const colors: Record<string, string> = {
@@ -75,7 +100,7 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
   }
 
   return (
-    <article className="card-diary">
+    <article className={`card-diary ${postColorClass}`}>
       {/* Header */}
       <div className="flex items-start space-x-3">
         <div className="avatar-sm flex-shrink-0">

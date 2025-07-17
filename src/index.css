@@ -183,11 +183,11 @@
 
 /* 日記カードスタイル */
 .diary-card {
-  @apply bg-white border border-gray-100 hover:border-gray-200 transition-all duration-200;
+  @apply border-2 hover:shadow-md transition-all duration-200;
 }
 
 .diary-card:hover {
-  @apply shadow-sm;
+  @apply shadow-lg transform scale-[1.02];
 }
 
 /* 感情バッジ */
