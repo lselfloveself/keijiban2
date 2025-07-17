@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Shield, Settings, Menu, X } from 'lucide-react'
+import { Shield, Settings, Menu, X, ExternalLink, LogIn } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
 import ElegantHeart from './ElegantHeart'
 
@@ -96,6 +96,31 @@ const Header: React.FC<HeaderProps> = ({ onAdminClick }) => {
         {showMobileMenu && (
           <div className="md:hidden border-t border-gray-100 py-4">
             <div className="space-y-4 px-4">
+              {/* かんじょうにっきリンク */}
+              <a
+                href="https://apps.namisapo2.love/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="nav-item w-full text-left"
+                onClick={() => setShowMobileMenu(false)}
+              >
+                <ExternalLink className="w-5 h-5" />
+                <span>かんじょうにっき</span>
+              </a>
+              
+              {/* 管理者ログイン */}
+              <button
+                onClick={() => {
+                  // 管理者ログイン機能は後で実装
+                  alert('管理者ログイン機能は準備中です')
+                  setShowMobileMenu(false)
+                }}
+                className="nav-item w-full text-left"
+              >
+                <LogIn className="w-5 h-5" />
+                <span>管理者ログイン</span>
+              </button>
+              
               <div className="flex items-center space-x-3 px-4">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-white to-gray-50 border border-gray-200 flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-200">
                   <ElegantHeart className={getRandomHeartColor()} size="md" />
