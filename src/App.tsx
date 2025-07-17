@@ -1,0 +1,271 @@
+import React, { useState, useEffect } from 'react'
+import { RefreshCw, TrendingUp } from 'lucide-react'
+import Header from './components/Header'
+import DiaryCard from './components/DiaryCard'
+import AdminPanel from './components/AdminPanel'
+import { useAuth } from './hooks/useAuth'
+import { supabase, Database } from './lib/supabase'
+
+type DiaryEntry = Database['public']['Tables']['diary']['Row']
+
+// テスト用のモックデータ
+const mockDiaries: DiaryEntry[] = [
+  {
+    id: 'test-1',
+    user_id: 'test-user-1',
+    nickname: '太郎',
+    content: '今日は久しぶりに友達と会えて本当に楽しかった！カフェで3時間も話し込んでしまった。やっぱり直接会って話すのは全然違うなあ。明日からまた頑張ろう！',
+    emotion: '😊',
+    created_at: new Date(Date.now() - 1000 * 60 * 30).toISOString(), // 30分前
+    is_public: true
+  },
+  {
+    id: 'test-2',
+    user_id: 'test-user-2',
+    nickname: null, // 匿名
+    content: '最近仕事が忙しすぎて疲れが取れない...。でも新しいプロジェクトが始まるから頑張らないと。早く慣れるといいな。',
+    emotion: '😴',
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(), // 2時間前
+    is_public: true
+  },
+  {
+    id: 'test-3',
+    user_id: 'test-user-3',
+    nickname: 'みかん',
+    content: '映画館で見た新作アニメが最高だった！！！\n\n作画も音楽も声優さんの演技も全部完璧で、途中で泣いちゃった😭\n\n原作ファンとしても大満足です。みんなにもおすすめしたい！',
+    emotion: '😍',
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString(), // 5時間前
+    is_public: true
+  },
+  {
+    id: 'test-4',
+    user_id: 'test-user-4',
+    nickname: 'ゆうき',
+    content: '電車で席を譲ろうとしたら断られてしまった。善意のつもりだったけど、相手の気持ちも考えないといけないなと反省。難しい...',
+    emotion: '😰',
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 8).toISOString(), // 8時間前
+    is_public: true
+  },
+  {
+    id: 'test-5',
+    user_id: 'test-user-5',
+    nickname: null, // 匿名
+    content: '今日は雨だったけど、家でゆっくり読書できて良い一日だった。久しぶりに小説を最後まで読み切れた。次は何を読もうかな？',
+    emotion: '😊',
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 12).toISOString(), // 12時間前
+    is_public: true
+  }
+]
+function App() {
+  const [diaries, setDiaries] = useState<DiaryEntry[]>([])
+  const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
+  const [showAdminPanel, setShowAdminPanel] = useState(false)
+  const [useTestData, setUseTestData] = useState(true) // テストデータ使用フラグ
+  const { user, profile, loading: authLoading } = useAuth()
+
+  useEffect(() => {
+    if (!authLoading) {
+      if (useTestData) {
+        // テストデータを使用
+        setDiaries(mockDiaries)
+        setLoading(false)
+      } else {
+        fetchDiaries()
+      }
+    }
+  }, [authLoading, useTestData])
+
+  const fetchDiaries = async () => {
+    try {
+      setRefreshing(true)
+      const { data, error } = await supabase
+        .from('diary')
+        .select('*')
+        .eq('is_public', true)
+        .order('created_at', { ascending: false })
+
+      if (error) throw error
+      setDiaries(data || [])
+    } catch (error) {
+      console.error('Error fetching diaries:', error)
+    } finally {
+      setLoading(false)
+      setRefreshing(false)
+    }
+  }
+
+  const handleDeleteDiary = async (diaryId: string) => {
+    if (useTestData) {
+      // テストデータの場合はローカルで削除
+      setDiaries(prev => prev.filter(diary => diary.id !== diaryId))
+      return
+    }
+
+    try {
+      const { error } = await supabase
+        .from('diary')
+        .delete()
+        .eq('id', diaryId)
+
+      if (error) throw error
+      
+      setDiaries(prev => prev.filter(diary => diary.id !== diaryId))
+    } catch (error) {
+      console.error('Error deleting diary:', error)
+      alert('削除に失敗しました')
+    }
+  }
+
+  const handleUpdateDiary = async (diaryId: string, updates: Partial<DiaryEntry>) => {
+    if (useTestData) {
+      // テストデータの場合はローカルで更新
+      setDiaries(prev => 
+        prev.map(diary => 
+          diary.id === diaryId ? { ...diary, ...updates } : diary
+        )
+      )
+      return
+    }
+
+    try {
+      const { error } = await supabase
+        .from('diary')
+        .update(updates)
+        .eq('id', diaryId)
+
+      if (error) throw error
+      
+      setDiaries(prev => 
+        prev.map(diary => 
+          diary.id === diaryId ? { ...diary, ...updates } : diary
+        )
+      )
+    } catch (error) {
+      console.error('Error updating diary:', error)
+      alert('更新に失敗しました')
+    }
+  }
+
+  const handleRefresh = () => {
+    if (useTestData) {
+      // テストデータをリフレッシュ
+      setRefreshing(true)
+      setTimeout(() => {
+        setDiaries([...mockDiaries])
+        setRefreshing(false)
+      }, 500)
+    } else {
+      fetchDiaries()
+    }
+  }
+  if (authLoading || loading) {
+    return (
+      <div className="min-h-screen bg-white">
+        <Header />
+        <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-white">
+      <Header onAdminClick={() => setShowAdminPanel(true)} />
+      
+      <main className="max-w-2xl mx-auto border-x border-gray-200 min-h-screen">
+        {/* Header Section */}
+        <div className="sticky top-16 bg-white bg-opacity-80 backdrop-blur-md border-b border-gray-200 p-4 z-30">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-xl font-bold text-black">ホーム</h1>
+              <p className="text-sm text-gray-500">{diaries.length}件のツイート</p>
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              {/* テストデータ切り替えボタン */}
+              <button
+                onClick={() => setUseTestData(!useTestData)}
+                className={`px-3 py-1 text-xs rounded-full transition-colors ${
+                  useTestData 
+                    ? 'bg-blue-100 text-blue-700' 
+                    : 'bg-gray-100 text-gray-700'
+                }`}
+              >
+                {useTestData ? 'テスト' : '本番'}
+              </button>
+              
+              <button
+                onClick={handleRefresh}
+                disabled={refreshing}
+                className={`p-2 hover:bg-gray-100 rounded-full transition-colors ${
+                  refreshing ? 'animate-spin' : ''
+                }`}
+              >
+                <RefreshCw className="w-5 h-5 text-gray-600" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Trending Section */}
+        <div className="border-b border-gray-200 p-4">
+          <div className="flex items-center space-x-2 text-gray-600">
+            <TrendingUp className="w-5 h-5" />
+            <span className="font-medium">いま話題の感情</span>
+          </div>
+          <div className="flex space-x-2 mt-2">
+            {['😊', '😢', '😡', '😴', '😰', '😍'].map((emotion) => (
+              <span key={emotion} className="text-2xl hover:scale-110 transition-transform cursor-pointer">
+                {emotion}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Timeline */}
+        <div>
+          {diaries.length > 0 ? (
+            diaries.map((diary) => (
+              <DiaryCard
+                key={diary.id}
+                diary={diary}
+                currentUserId={user?.id}
+                isAdmin={profile?.is_admin || false}
+                onDelete={handleDeleteDiary}
+                onUpdate={handleUpdateDiary}
+              />
+            ))
+          ) : (
+            <div className="text-center py-16">
+              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <TrendingUp className="w-8 h-8 text-gray-400" />
+              </div>
+              <h3 className="text-xl font-bold text-black mb-2">
+                タイムラインが空です
+              </h3>
+              <p className="text-gray-500 max-w-sm mx-auto">
+                かんじょうにっきアプリで「公開」を選択した日記が、ここに表示されます。
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Footer Info */}
+        <div className="border-t border-gray-200 p-6 text-center">
+          <p className="text-sm text-gray-500">
+            <strong>💡 ヒント：</strong> かんじょうにっきアプリで「公開」を選択した日記が、この掲示板に自動で表示されます。
+          </p>
+        </div>
+      </main>
+
+      {/* Admin Panel */}
+      {showAdminPanel && (
+        <AdminPanel onClose={() => setShowAdminPanel(false)} />
+      )}
+    </div>
+  )
+}
+
+export default App

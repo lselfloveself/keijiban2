@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* X風のフォント設定 */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* X風のスクロールバー */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #536471;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #657786;
+}
+
+/* X風のフォーカスリング */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-0;
+}
+
+/* X風のボタンスタイル */
+.btn-primary {
+  @apply px-4 py-2 bg-black text-white rounded-full font-bold hover:bg-gray-800 transition-colors duration-200;
+}
+
+.btn-secondary {
+  @apply px-4 py-2 border border-gray-300 text-black rounded-full font-bold hover:bg-gray-50 transition-colors duration-200;
+}
+
+.btn-danger {
+  @apply px-4 py-2 bg-red-600 text-white rounded-full font-bold hover:bg-red-700 transition-colors duration-200;
+}
+
+/* X風のカードスタイル */
+.tweet-card {
+  @apply border-b border-gray-200 hover:bg-gray-50 transition-colors duration-200 cursor-pointer;
+}
+
+/* X風のアバター */
+.avatar {
+  @apply w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center;
+}
+
+/* X風のテキストスタイル */
+.text-primary {
+  @apply text-gray-900;
+}
+
+.text-secondary {
+  @apply text-gray-500;
+}
+
+.text-muted {
+  @apply text-gray-400;
+}
+
+/* X風のリンクスタイル */
+.link {
+  @apply text-blue-500 hover:underline;
+}
+
+/* X風のモーダル */
+.modal-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50;
+}
+
+.modal-content {
+  @apply bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto;
+}
+
+/* X風のフォーム */
+.form-input {
+  @apply w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none;
+}
+
+/* X風のナビゲーション */
+.nav-item {
+  @apply flex items-center space-x-3 px-4 py-3 rounded-full hover:bg-gray-100 transition-colors duration-200;
+}
+
+/* アニメーション */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* レスポンシブ調整 */
+@media (max-width: 640px) {
+  .container-responsive {
+    @apply px-4;
+  }
+  
+  .text-responsive {
+    @apply text-sm;
+  }
+}
+
+/* ダークモード対応（将来の拡張用） */
+@media (prefers-color-scheme: dark) {
+  /* ダークモードのスタイルを追加する場合はここに */
+}
