@@ -175,19 +175,13 @@ function App() {
       <Header onAdminClick={() => setShowAdminPanel(true)} />
       
       <main className="content-container">
-        {/* Header Section */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* メインコンテンツ */}
           <div className="lg:col-span-2 space-y-8">
-            {/* ヘッダーカード */}
+            {/* 直近の日記 */}
             <div className="card-soft">
               <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h1 className="section-header mb-2">今日の出来事</h1>
-                  <div className="date-display">
-                    📅 7月17日 (木)
-                  </div>
-                </div>
+                <h2 className="section-header">直近の日記（最大10件）</h2>
                 
                 <div className="flex items-center space-x-3">
                   {/* テストデータ切り替えボタン */}
@@ -213,42 +207,6 @@ function App() {
                   </button>
                 </div>
               </div>
-              
-              {/* 今日の出来事を書く */}
-              <div className="section-subheader">
-                今日の出来事を書いてみましょう
-              </div>
-              
-              <div className="diary-input-area">
-                <div className="flex space-x-4">
-                  <div className="diary-input-divider h-32"></div>
-                  <div className="flex-1">
-                    <textarea
-                      className="diary-input-field"
-                      placeholder="今日はどんな一日でしたか？"
-                      rows={4}
-                    />
-                  </div>
-                </div>
-              </div>
-              
-              {/* 注意書き */}
-              <div className="info-card info mt-6">
-                <div className="flex items-start space-x-3">
-                  <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-blue-600 text-sm">💡</span>
-                  </div>
-                  <div>
-                    <p className="text-blue-800 font-medium mb-1">思い出すのがつらい場合は、無理をしないでください。</p>
-                    <p className="text-blue-600 text-sm">書ける範囲で、あなたのペースで大丈夫です。</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* 直近の日記 */}
-            <div className="card-soft">
-              <h2 className="section-header">直近の日記（最大10件）</h2>
               
               <div className="space-y-6">
                 {diaries.length > 0 ? (
@@ -281,109 +239,7 @@ function App() {
 
           {/* サイドバー */}
           <div className="space-y-8">
-            {/* 今日の気持ち */}
-            <div className="sidebar-card">
-              <h3 className="section-header text-lg">今日の気持ち</h3>
-              <p className="section-subheader">どの気持ちに近いですか？</p>
-              
-              <div className="space-y-4">
-                <p className="text-sm font-medium text-gray-700 mb-3">ネガティブな感情</p>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="emotion-option fear">
-                    <div className="flex items-center space-x-2">
-                      <input type="radio" name="emotion" className="text-purple-500" />
-                      <span className="text-purple-700 text-sm font-medium">恐怖</span>
-                    </div>
-                  </div>
-                  <div className="emotion-option sadness">
-                    <div className="flex items-center space-x-2">
-                      <input type="radio" name="emotion" className="text-blue-500" />
-                      <span className="text-blue-700 text-sm font-medium">悲しみ</span>
-                    </div>
-                  </div>
-                  <div className="emotion-option anger">
-                    <div className="flex items-center space-x-2">
-                      <input type="radio" name="emotion" className="text-red-500" />
-                      <span className="text-red-700 text-sm font-medium">怒り</span>
-                    </div>
-                  </div>
-                  <div className="emotion-option disgust">
-                    <div className="flex items-center space-x-2">
-                      <input type="radio" name="emotion" className="text-green-500" />
-                      <span className="text-green-700 text-sm font-medium">嫌悪</span>
-                    </div>
-                  </div>
-                  <div className="emotion-option indifference">
-                    <div className="flex items-center space-x-2">
-                      <input type="radio" name="emotion" className="text-gray-500" />
-                      <span className="text-gray-700 text-sm font-medium">無関心感</span>
-                    </div>
-                  </div>
-                  <div className="emotion-option guilt">
-                    <div className="flex items-center space-x-2">
-                      <input type="radio" name="emotion" className="text-orange-500" />
-                      <span className="text-orange-700 text-sm font-medium">罪悪感</span>
-                    </div>
-                  </div>
-                  <div className="emotion-option loneliness">
-                    <div className="flex items-center space-x-2">
-                      <input type="radio" name="emotion" className="text-indigo-500" />
-                      <span className="text-indigo-700 text-sm font-medium">寂しさ</span>
-                    </div>
-                  </div>
-                  <div className="emotion-option shame">
-                    <div className="flex items-center space-x-2">
-                      <input type="radio" name="emotion" className="text-pink-500" />
-                      <span className="text-pink-700 text-sm font-medium">恥ずかしさ</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* いま話題の感情 */}
-            <div className="sidebar-card">
-              <div className="flex items-center space-x-2 text-gray-700 mb-4">
-                <TrendingUp className="w-5 h-5" />
-                <span className="font-bold">いま話題の感情</span>
-              </div>
-              <div className="grid grid-cols-3 gap-2">
-                {['😊', '😢', '😡', '😴', '😰', '😍'].map((emotion) => (
-                  <div key={emotion} className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer text-center">
-                    <span className="text-2xl">{emotion}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* ヒント */}
-            <div className="info-card info">
-              <div className="flex items-start space-x-3">
-                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-blue-600 text-sm">💡</span>
-                </div>
-                <div>
-                  <h4 className="font-bold text-blue-900 mb-2">ヒント</h4>
-                  <p className="text-blue-700 text-sm leading-relaxed">
-                    かんじょうにっきアプリで「公開」を選択した日記が、この掲示板に自動で表示されます。
-                  </p>
-                </div>
-              </div>
-            </div>
-            
-            {/* 統計情報 */}
-            <div className="info-card success">
-              <div className="flex items-center space-x-3 mb-3">
-                <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
-                  <span className="text-green-600 text-sm">✓</span>
-                </div>
-                <span className="font-bold text-green-800">11件の日記が見つかりました</span>
-              </div>
-              <div className="text-sm text-green-700">
-                <p>今日も一日お疲れさまでした。</p>
-                <p className="mt-1">あなたのペースで続けていきましょう。</p>
-              </div>
-            </div>
+            {/* サイドバーは空にして、将来的に必要な要素を追加可能 */}
           </div>
         </div>
       </main>
