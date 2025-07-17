@@ -2,95 +2,152 @@
 @tailwind components;
 @tailwind utilities;
 
-/* X風のフォント設定 */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+/* 日本語フォント設定 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap');
 
 * {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* X風のスクロールバー */
+/* カスタムスクロールバー */
 ::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #f8fafc;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #536471;
-  border-radius: 2px;
+  background: #e2e8f0;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #657786;
+  background: #cbd5e1;
 }
 
-/* X風のフォーカスリング */
-.focus-ring {
-  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-0;
-}
-
-/* X風のボタンスタイル */
+/* カスタムボタンスタイル */
 .btn-primary {
-  @apply px-4 py-2 bg-black text-white rounded-full font-bold hover:bg-gray-800 transition-colors duration-200;
+  @apply px-6 py-3 bg-blue-500 text-white rounded-xl font-medium hover:bg-blue-600 transition-all duration-200 shadow-sm hover:shadow-md;
 }
 
 .btn-secondary {
-  @apply px-4 py-2 border border-gray-300 text-black rounded-full font-bold hover:bg-gray-50 transition-colors duration-200;
+  @apply px-6 py-3 border border-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-all duration-200;
 }
 
 .btn-danger {
-  @apply px-4 py-2 bg-red-600 text-white rounded-full font-bold hover:bg-red-700 transition-colors duration-200;
+  @apply px-4 py-2 bg-red-500 text-white rounded-xl font-medium hover:bg-red-600 transition-all duration-200;
 }
 
-/* X風のカードスタイル */
-.tweet-card {
-  @apply border-b border-gray-200 hover:bg-gray-50 transition-colors duration-200 cursor-pointer;
+/* カードスタイル - スクリーンショット参考 */
+.card {
+  @apply bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200;
 }
 
-/* X風のアバター */
+.card-soft {
+  @apply bg-white rounded-2xl shadow-sm border border-gray-100 p-8;
+}
+
+.card-diary {
+  @apply bg-white rounded-2xl border border-gray-100 p-6 mb-4 hover:shadow-sm transition-all duration-200;
+}
+
+/* 感情カードスタイル - スクリーンショット参考 */
+.emotion-card {
+  @apply rounded-xl border-2 p-4 transition-all duration-200 cursor-pointer hover:shadow-sm;
+}
+
+.emotion-card.selected {
+  @apply ring-2 ring-offset-2;
+}
+
+/* 感情選択カード - パステルカラー */
+.emotion-option {
+  @apply p-4 rounded-xl border border-gray-200 cursor-pointer transition-all duration-200 hover:shadow-sm;
+}
+
+.emotion-option.fear {
+  @apply bg-purple-50 border-purple-200 hover:bg-purple-100;
+}
+
+.emotion-option.sadness {
+  @apply bg-blue-50 border-blue-200 hover:bg-blue-100;
+}
+
+.emotion-option.anger {
+  @apply bg-red-50 border-red-200 hover:bg-red-100;
+}
+
+.emotion-option.disgust {
+  @apply bg-green-50 border-green-200 hover:bg-green-100;
+}
+
+.emotion-option.indifference {
+  @apply bg-gray-50 border-gray-200 hover:bg-gray-100;
+}
+
+.emotion-option.guilt {
+  @apply bg-orange-50 border-orange-200 hover:bg-orange-100;
+}
+
+.emotion-option.loneliness {
+  @apply bg-indigo-50 border-indigo-200 hover:bg-indigo-100;
+}
+
+.emotion-option.shame {
+  @apply bg-pink-50 border-pink-200 hover:bg-pink-100;
+}
+
+/* アバタースタイル */
 .avatar {
-  @apply w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center;
+  @apply w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-medium;
 }
 
-/* X風のテキストスタイル */
-.text-primary {
-  @apply text-gray-900;
+.avatar-sm {
+  @apply w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-sm font-medium;
 }
 
-.text-secondary {
-  @apply text-gray-500;
+/* フォーカスリング */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
 }
 
-.text-muted {
-  @apply text-gray-400;
+/* フォーム要素 */
+.form-input {
+  @apply w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-all duration-200 bg-white;
 }
 
-/* X風のリンクスタイル */
-.link {
-  @apply text-blue-500 hover:underline;
+.form-textarea {
+  @apply w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none min-h-[120px] transition-all duration-200 bg-white;
 }
 
-/* X風のモーダル */
+/* 日記入力エリア - スクリーンショット参考 */
+.diary-input-area {
+  @apply bg-white rounded-2xl border border-gray-200 p-6;
+}
+
+.diary-input-field {
+  @apply w-full border-none outline-none resize-none text-lg placeholder-gray-400 bg-transparent;
+}
+
+.diary-input-divider {
+  @apply w-1 bg-red-400 rounded-full;
+}
+
+/* ナビゲーション */
+.nav-item {
+  @apply flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-gray-50 transition-all duration-200 cursor-pointer;
+}
+
+/* モーダル */
 .modal-overlay {
-  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50;
+  @apply fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center p-4 z-50 backdrop-blur-sm;
 }
 
 .modal-content {
-  @apply bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto;
-}
-
-/* X風のフォーム */
-.form-input {
-  @apply w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none;
-}
-
-/* X風のナビゲーション */
-.nav-item {
-  @apply flex items-center space-x-3 px-4 py-3 rounded-full hover:bg-gray-100 transition-colors duration-200;
+  @apply bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl;
 }
 
 /* アニメーション */
@@ -105,8 +162,112 @@
   }
 }
 
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 .animate-fade-in {
   animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* 日記カードスタイル */
+.diary-card {
+  @apply bg-white border border-gray-100 hover:border-gray-200 transition-all duration-200;
+}
+
+.diary-card:hover {
+  @apply shadow-sm;
+}
+
+/* 感情バッジ */
+.emotion-badge {
+  @apply inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium border;
+}
+
+/* ステータスバッジ */
+.status-badge {
+  @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium;
+}
+
+/* 情報カード - スクリーンショット参考 */
+.info-card {
+  @apply rounded-2xl p-6 border;
+}
+
+.info-card.success {
+  @apply bg-green-50 border-green-200;
+}
+
+.info-card.info {
+  @apply bg-blue-50 border-blue-200;
+}
+
+.info-card.warning {
+  @apply bg-orange-50 border-orange-200;
+}
+
+.info-card.purple {
+  @apply bg-purple-50 border-purple-200;
+}
+
+/* セクションヘッダー */
+.section-header {
+  @apply text-xl font-bold text-gray-900 mb-6;
+}
+
+.section-subheader {
+  @apply text-sm text-gray-600 mb-4;
+}
+
+/* 日付表示 */
+.date-display {
+  @apply text-sm text-gray-500 bg-gray-50 px-3 py-1 rounded-lg;
+}
+
+/* アクションボタン */
+.action-btn {
+  @apply p-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-500 hover:text-gray-700;
+}
+
+.action-btn.edit {
+  @apply text-green-500 hover:text-green-600 hover:bg-green-50;
+}
+
+.action-btn.delete {
+  @apply text-red-500 hover:text-red-600 hover:bg-red-50;
+}
+
+/* グラデーション背景 */
+.gradient-bg {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.gradient-bg-soft {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+/* テキストスタイル */
+.text-primary {
+  @apply text-gray-900;
+}
+
+.text-secondary {
+  @apply text-gray-600;
+}
+
+.text-muted {
+  @apply text-gray-500;
 }
 
 /* レスポンシブ調整 */
@@ -118,9 +279,38 @@
   .text-responsive {
     @apply text-sm;
   }
+  
+  .card-responsive {
+    @apply rounded-xl;
+  }
+  
+  .card-soft {
+    @apply p-6;
+  }
 }
 
-/* ダークモード対応（将来の拡張用） */
-@media (prefers-color-scheme: dark) {
-  /* ダークモードのスタイルを追加する場合はここに */
+/* カスタムユーティリティ */
+.glass-effect {
+  @apply bg-white bg-opacity-80 backdrop-blur-md;
+}
+
+.shadow-soft {
+  box-shadow: 0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04);
+}
+
+.border-soft {
+  @apply border border-gray-100;
+}
+
+/* 特別なレイアウト */
+.main-layout {
+  @apply min-h-screen bg-gray-50;
+}
+
+.content-container {
+  @apply max-w-6xl mx-auto px-4 py-8;
+}
+
+.sidebar-card {
+  @apply bg-white rounded-2xl border border-gray-100 p-6 shadow-sm;
 }

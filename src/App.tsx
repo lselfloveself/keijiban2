@@ -171,92 +171,220 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="main-layout">
       <Header onAdminClick={() => setShowAdminPanel(true)} />
       
-      <main className="max-w-2xl mx-auto border-x border-gray-200 min-h-screen">
+      <main className="content-container">
         {/* Header Section */}
-        <div className="sticky top-16 bg-white bg-opacity-80 backdrop-blur-md border-b border-gray-200 p-4 z-30">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-xl font-bold text-black">ホーム</h1>
-              <p className="text-sm text-gray-500">{diaries.length}件のツイート</p>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* メインコンテンツ */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* ヘッダーカード */}
+            <div className="card-soft">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h1 className="section-header mb-2">今日の出来事</h1>
+                  <div className="date-display">
+                    📅 7月17日 (木)
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-3">
+                  {/* テストデータ切り替えボタン */}
+                  <button
+                    onClick={() => setUseTestData(!useTestData)}
+                    className={`px-4 py-2 text-sm rounded-lg font-medium transition-colors ${
+                      useTestData 
+                        ? 'bg-blue-100 text-blue-700 border border-blue-200' 
+                        : 'bg-gray-100 text-gray-700 border border-gray-200'
+                    }`}
+                  >
+                    {useTestData ? 'テストモード' : '本番モード'}
+                  </button>
+                  
+                  <button
+                    onClick={handleRefresh}
+                    disabled={refreshing}
+                    className={`action-btn ${
+                      refreshing ? 'animate-spin' : ''
+                    }`}
+                  >
+                    <RefreshCw className="w-5 h-5 text-gray-600" />
+                  </button>
+                </div>
+              </div>
+              
+              {/* 今日の出来事を書く */}
+              <div className="section-subheader">
+                今日の出来事を書いてみましょう
+              </div>
+              
+              <div className="diary-input-area">
+                <div className="flex space-x-4">
+                  <div className="diary-input-divider h-32"></div>
+                  <div className="flex-1">
+                    <textarea
+                      className="diary-input-field"
+                      placeholder="今日はどんな一日でしたか？"
+                      rows={4}
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              {/* 注意書き */}
+              <div className="info-card info mt-6">
+                <div className="flex items-start space-x-3">
+                  <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-blue-600 text-sm">💡</span>
+                  </div>
+                  <div>
+                    <p className="text-blue-800 font-medium mb-1">思い出すのがつらい場合は、無理をしないでください。</p>
+                    <p className="text-blue-600 text-sm">書ける範囲で、あなたのペースで大丈夫です。</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 直近の日記 */}
+            <div className="card-soft">
+              <h2 className="section-header">直近の日記（最大10件）</h2>
+              
+              <div className="space-y-6">
+                {diaries.length > 0 ? (
+                  diaries.map((diary) => (
+                    <DiaryCard
+                      key={diary.id}
+                      diary={diary}
+                      currentUserId={user?.id}
+                      isAdmin={profile?.is_admin || false}
+                      onDelete={handleDeleteDiary}
+                      onUpdate={handleUpdateDiary}
+                    />
+                  ))
+                ) : (
+                  <div className="text-center py-12">
+                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <TrendingUp className="w-8 h-8 text-gray-400" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">
+                      まだ投稿がありません
+                    </h3>
+                    <p className="text-gray-500 max-w-sm mx-auto">
+                      かんじょうにっきアプリで「公開」を選択した日記が、ここに表示されます。
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* サイドバー */}
+          <div className="space-y-8">
+            {/* 今日の気持ち */}
+            <div className="sidebar-card">
+              <h3 className="section-header text-lg">今日の気持ち</h3>
+              <p className="section-subheader">どの気持ちに近いですか？</p>
+              
+              <div className="space-y-4">
+                <p className="text-sm font-medium text-gray-700 mb-3">ネガティブな感情</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="emotion-option fear">
+                    <div className="flex items-center space-x-2">
+                      <input type="radio" name="emotion" className="text-purple-500" />
+                      <span className="text-purple-700 text-sm font-medium">恐怖</span>
+                    </div>
+                  </div>
+                  <div className="emotion-option sadness">
+                    <div className="flex items-center space-x-2">
+                      <input type="radio" name="emotion" className="text-blue-500" />
+                      <span className="text-blue-700 text-sm font-medium">悲しみ</span>
+                    </div>
+                  </div>
+                  <div className="emotion-option anger">
+                    <div className="flex items-center space-x-2">
+                      <input type="radio" name="emotion" className="text-red-500" />
+                      <span className="text-red-700 text-sm font-medium">怒り</span>
+                    </div>
+                  </div>
+                  <div className="emotion-option disgust">
+                    <div className="flex items-center space-x-2">
+                      <input type="radio" name="emotion" className="text-green-500" />
+                      <span className="text-green-700 text-sm font-medium">嫌悪</span>
+                    </div>
+                  </div>
+                  <div className="emotion-option indifference">
+                    <div className="flex items-center space-x-2">
+                      <input type="radio" name="emotion" className="text-gray-500" />
+                      <span className="text-gray-700 text-sm font-medium">無関心感</span>
+                    </div>
+                  </div>
+                  <div className="emotion-option guilt">
+                    <div className="flex items-center space-x-2">
+                      <input type="radio" name="emotion" className="text-orange-500" />
+                      <span className="text-orange-700 text-sm font-medium">罪悪感</span>
+                    </div>
+                  </div>
+                  <div className="emotion-option loneliness">
+                    <div className="flex items-center space-x-2">
+                      <input type="radio" name="emotion" className="text-indigo-500" />
+                      <span className="text-indigo-700 text-sm font-medium">寂しさ</span>
+                    </div>
+                  </div>
+                  <div className="emotion-option shame">
+                    <div className="flex items-center space-x-2">
+                      <input type="radio" name="emotion" className="text-pink-500" />
+                      <span className="text-pink-700 text-sm font-medium">恥ずかしさ</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* いま話題の感情 */}
+            <div className="sidebar-card">
+              <div className="flex items-center space-x-2 text-gray-700 mb-4">
+                <TrendingUp className="w-5 h-5" />
+                <span className="font-bold">いま話題の感情</span>
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                {['😊', '😢', '😡', '😴', '😰', '😍'].map((emotion) => (
+                  <div key={emotion} className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer text-center">
+                    <span className="text-2xl">{emotion}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* ヒント */}
+            <div className="info-card info">
+              <div className="flex items-start space-x-3">
+                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span className="text-blue-600 text-sm">💡</span>
+                </div>
+                <div>
+                  <h4 className="font-bold text-blue-900 mb-2">ヒント</h4>
+                  <p className="text-blue-700 text-sm leading-relaxed">
+                    かんじょうにっきアプリで「公開」を選択した日記が、この掲示板に自動で表示されます。
+                  </p>
+                </div>
+              </div>
             </div>
             
-            <div className="flex items-center space-x-2">
-              {/* テストデータ切り替えボタン */}
-              <button
-                onClick={() => setUseTestData(!useTestData)}
-                className={`px-3 py-1 text-xs rounded-full transition-colors ${
-                  useTestData 
-                    ? 'bg-blue-100 text-blue-700' 
-                    : 'bg-gray-100 text-gray-700'
-                }`}
-              >
-                {useTestData ? 'テスト' : '本番'}
-              </button>
-              
-              <button
-                onClick={handleRefresh}
-                disabled={refreshing}
-                className={`p-2 hover:bg-gray-100 rounded-full transition-colors ${
-                  refreshing ? 'animate-spin' : ''
-                }`}
-              >
-                <RefreshCw className="w-5 h-5 text-gray-600" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Trending Section */}
-        <div className="border-b border-gray-200 p-4">
-          <div className="flex items-center space-x-2 text-gray-600">
-            <TrendingUp className="w-5 h-5" />
-            <span className="font-medium">いま話題の感情</span>
-          </div>
-          <div className="flex space-x-2 mt-2">
-            {['😊', '😢', '😡', '😴', '😰', '😍'].map((emotion) => (
-              <span key={emotion} className="text-2xl hover:scale-110 transition-transform cursor-pointer">
-                {emotion}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Timeline */}
-        <div>
-          {diaries.length > 0 ? (
-            diaries.map((diary) => (
-              <DiaryCard
-                key={diary.id}
-                diary={diary}
-                currentUserId={user?.id}
-                isAdmin={profile?.is_admin || false}
-                onDelete={handleDeleteDiary}
-                onUpdate={handleUpdateDiary}
-              />
-            ))
-          ) : (
-            <div className="text-center py-16">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <TrendingUp className="w-8 h-8 text-gray-400" />
+            {/* 統計情報 */}
+            <div className="info-card success">
+              <div className="flex items-center space-x-3 mb-3">
+                <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
+                  <span className="text-green-600 text-sm">✓</span>
+                </div>
+                <span className="font-bold text-green-800">11件の日記が見つかりました</span>
               </div>
-              <h3 className="text-xl font-bold text-black mb-2">
-                タイムラインが空です
-              </h3>
-              <p className="text-gray-500 max-w-sm mx-auto">
-                かんじょうにっきアプリで「公開」を選択した日記が、ここに表示されます。
-              </p>
+              <div className="text-sm text-green-700">
+                <p>今日も一日お疲れさまでした。</p>
+                <p className="mt-1">あなたのペースで続けていきましょう。</p>
+              </div>
             </div>
-          )}
-        </div>
-
-        {/* Footer Info */}
-        <div className="border-t border-gray-200 p-6 text-center">
-          <p className="text-sm text-gray-500">
-            <strong>💡 ヒント：</strong> かんじょうにっきアプリで「公開」を選択した日記が、この掲示板に自動で表示されます。
-          </p>
+          </div>
         </div>
       </main>
 

@@ -72,26 +72,26 @@ const CommentSection: React.FC<CommentSectionProps> = ({ diaryId }) => {
       <div className="space-y-4">
         {comments.map((comment) => (
           <div key={comment.id} className="flex space-x-3">
-            <div className="avatar flex-shrink-0">
-              <User className="w-4 h-4 text-gray-600" />
+            <div className="avatar-sm flex-shrink-0">
+              <User className="w-3 h-3" />
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center space-x-2">
-                <span className="font-medium text-black text-sm">
+                <span className="font-medium text-gray-900 text-xs">
                   {comment.nickname || '匿名'}
                 </span>
-                <span className="text-gray-500 text-sm">
+                <span className="text-gray-500 text-xs">
                   @{comment.nickname?.toLowerCase().replace(/\s+/g, '') || 'anonymous'}
                 </span>
-                <span className="text-gray-500">·</span>
-                <span className="text-gray-500 text-sm">
+                <span className="text-gray-400">·</span>
+                <span className="text-gray-500 text-xs">
                   {formatDistanceToNow(new Date(comment.created_at), { 
                     addSuffix: true, 
                     locale: ja 
                   })}
                 </span>
               </div>
-              <p className="text-black text-sm mt-1 leading-relaxed">
+              <p className="text-gray-800 text-xs mt-1 leading-relaxed">
                 {comment.content}
               </p>
             </div>
@@ -101,17 +101,17 @@ const CommentSection: React.FC<CommentSectionProps> = ({ diaryId }) => {
 
       {/* Add Comment Form */}
       {user ? (
-        <form onSubmit={handleSubmit} className="border-t border-gray-100 pt-4">
+        <form onSubmit={handleSubmit} className="border-t border-gray-100 pt-4 bg-gray-50 rounded-lg p-4 mt-4">
           <div className="flex space-x-3">
-            <div className="avatar flex-shrink-0">
-              <User className="w-4 h-4 text-gray-600" />
+            <div className="avatar-sm flex-shrink-0">
+              <User className="w-3 h-3" />
             </div>
             <div className="flex-1">
               <textarea
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
-                placeholder="返信をツイート"
-                className="form-input text-xl placeholder-gray-500 border-none resize-none focus:ring-0"
+                placeholder="コメントを書く..."
+                className="w-full p-3 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-sm placeholder-gray-500"
                 rows={2}
                 maxLength={280}
               />
@@ -134,13 +134,13 @@ const CommentSection: React.FC<CommentSectionProps> = ({ diaryId }) => {
                   <button
                     type="submit"
                     disabled={!newComment.trim() || isSubmitting}
-                    className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed text-sm"
                   >
                     {isSubmitting ? (
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     ) : (
                       <>
-                        <Send className="w-4 h-4 mr-2" />
+                        <Send className="w-3 h-3 mr-1" />
                         返信
                       </>
                     )}
@@ -151,7 +151,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ diaryId }) => {
           </div>
         </form>
       ) : (
-        <div className="text-center py-6 border-t border-gray-100">
+        <div className="text-center py-6 border-t border-gray-100 bg-gray-50 rounded-lg mt-4">
           <p className="text-gray-500">
             返信するにはログインしてください
           </p>

@@ -11,13 +11,13 @@ const Header: React.FC<HeaderProps> = ({ onAdminClick }) => {
   const [showMobileMenu, setShowMobileMenu] = useState(false)
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
-      <div className="max-w-6xl mx-auto px-4">
+    <header className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
+      <div className="max-w-6xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-sm">📝</span>
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-sm">
+              <span className="text-white font-bold text-lg">📝</span>
             </div>
             <h1 className="text-xl font-bold text-black hidden sm:block">
               かんじょうにっき掲示板
@@ -31,13 +31,13 @@ const Header: React.FC<HeaderProps> = ({ onAdminClick }) => {
           <div className="hidden md:flex items-center space-x-4">
             {user ? (
               <>
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-3 bg-gray-50 rounded-xl px-4 py-2">
                   <div className="avatar">
-                    <User className="w-5 h-5 text-gray-600" />
+                    <User className="w-5 h-5" />
                   </div>
                   <div>
                     <div className="flex items-center space-x-1">
-                      <span className="text-sm font-medium text-black">
+                      <span className="text-sm font-medium text-gray-900">
                         {profile?.display_name || '匿名'}
                       </span>
                       {profile?.is_admin && (
@@ -53,7 +53,7 @@ const Header: React.FC<HeaderProps> = ({ onAdminClick }) => {
                 {profile?.is_admin && (
                   <button
                     onClick={onAdminClick}
-                    className="flex items-center space-x-2 px-3 py-2 text-gray-600 hover:text-black hover:bg-gray-100 rounded-full transition-colors"
+                    className="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition-colors"
                   >
                     <Settings className="w-4 h-4" />
                     <span className="text-sm">管理</span>
@@ -62,7 +62,7 @@ const Header: React.FC<HeaderProps> = ({ onAdminClick }) => {
                 
                 <button
                   onClick={signOut}
-                  className="flex items-center space-x-2 px-3 py-2 text-gray-600 hover:text-black hover:bg-gray-100 rounded-full transition-colors"
+                  className="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition-colors"
                 >
                   <LogOut className="w-4 h-4" />
                   <span className="text-sm">ログアウト</span>
@@ -83,7 +83,7 @@ const Header: React.FC<HeaderProps> = ({ onAdminClick }) => {
           <div className="md:hidden">
             <button
               onClick={() => setShowMobileMenu(!showMobileMenu)}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              className="action-btn"
             >
               {showMobileMenu ? (
                 <X className="w-5 h-5 text-gray-600" />
@@ -96,16 +96,16 @@ const Header: React.FC<HeaderProps> = ({ onAdminClick }) => {
 
         {/* Mobile Menu */}
         {showMobileMenu && (
-          <div className="md:hidden border-t border-gray-200 py-4">
+          <div className="md:hidden border-t border-gray-100 py-4">
             {user ? (
-              <div className="space-y-4">
+              <div className="space-y-4 px-4">
                 <div className="flex items-center space-x-3 px-4">
                   <div className="avatar">
-                    <User className="w-5 h-5 text-gray-600" />
+                    <User className="w-5 h-5" />
                   </div>
                   <div>
                     <div className="flex items-center space-x-1">
-                      <span className="text-sm font-medium text-black">
+                      <span className="text-sm font-medium text-gray-900">
                         {profile?.display_name || '匿名'}
                       </span>
                       {profile?.is_admin && (

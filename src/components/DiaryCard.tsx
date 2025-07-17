@@ -75,23 +75,23 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
   }
 
   return (
-    <article className="tweet-card p-4">
+    <article className="card-diary">
       {/* Header */}
       <div className="flex items-start space-x-3">
-        <div className="avatar flex-shrink-0">
-          <User className="w-5 h-5 text-gray-600" />
+        <div className="avatar-sm flex-shrink-0">
+          <User className="w-4 h-4" />
         </div>
         
         <div className="flex-1 min-w-0">
-          <div className="flex items-center space-x-2">
-            <span className="font-bold text-black">
+          <div className="flex items-center space-x-2 mb-3">
+            <span className="font-bold text-gray-900 text-sm">
               {diary.nickname || '匿名'}
             </span>
-            <span className="text-gray-500">
+            <span className="text-gray-400 text-sm">
               @{diary.nickname?.toLowerCase().replace(/\s+/g, '') || 'anonymous'}
             </span>
-            <span className="text-gray-500">·</span>
-            <span className="text-gray-500 text-sm">
+            <span className="text-gray-400">·</span>
+            <span className="text-gray-400 text-xs">
               {diary.created_at && formatDistanceToNow(new Date(diary.created_at), { 
                 addSuffix: true, 
                 locale: ja 
@@ -100,69 +100,70 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
           </div>
 
           {/* Content */}
-          <div className="mt-2">
-            <p className="text-black leading-relaxed whitespace-pre-wrap">
+          <div className="mt-3">
+            <p className="text-gray-800 leading-relaxed whitespace-pre-wrap text-sm">
               {diary.content}
             </p>
           </div>
 
           {/* Emotion */}
           {diary.emotion && (
-            <div className="mt-3">
-              <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm border ${getEmotionColor(diary.emotion)}`}>
-                {diary.emotion}
+            <div className="mt-4">
+              <span className={`emotion-badge ${getEmotionColor(diary.emotion)}`}>
+                <span className="mr-1">{diary.emotion}</span>
+                <span>気づき</span>
               </span>
             </div>
           )}
 
           {/* Actions */}
-          <div className="flex items-center justify-between mt-3 max-w-md">
+          <div className="flex items-center justify-between mt-6 max-w-md">
             <button 
               onClick={() => setShowComments(!showComments)}
-              className="flex items-center space-x-2 text-gray-500 hover:text-blue-500 hover:bg-blue-50 px-3 py-2 rounded-full transition-colors group"
+              className="flex items-center space-x-2 text-gray-500 hover:text-blue-500 hover:bg-blue-50 px-3 py-2 rounded-lg transition-colors group text-sm"
             >
-              <MessageCircle className="w-5 h-5" />
-              <span className="text-sm">コメント</span>
+              <MessageCircle className="w-4 h-4" />
+              <span>コメント</span>
             </button>
             
             <button 
               onClick={handleLike}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-full transition-colors group ${
+              className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors group text-sm ${
                 liked 
                   ? 'text-red-500 hover:bg-red-50' 
                   : 'text-gray-500 hover:text-red-500 hover:bg-red-50'
               }`}
             >
-              <Heart className={`w-5 h-5 ${liked ? 'fill-current' : ''}`} />
-              <span className="text-sm">いいね</span>
+              <Heart className={`w-4 h-4 ${liked ? 'fill-current' : ''}`} />
+              <span>いいね</span>
             </button>
             
             <button 
               onClick={handleShare}
-              className="flex items-center space-x-2 text-gray-500 hover:text-green-500 hover:bg-green-50 px-3 py-2 rounded-full transition-colors group"
+              className="flex items-center space-x-2 text-gray-500 hover:text-green-500 hover:bg-green-50 px-3 py-2 rounded-lg transition-colors group text-sm"
             >
-              <Share className="w-5 h-5" />
-              <span className="text-sm">共有</span>
+              <Share className="w-4 h-4" />
+              <span>共有</span>
             </button>
 
             {canEdit && (
               <div className="relative">
                 <button 
                   onClick={() => setShowMenu(!showMenu)}
-                  className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors"
+                  className="action-btn"
                 >
-                  <MoreHorizontal className="w-5 h-5" />
+                  <MoreHorizontal className="w-4 h-4" />
                 </button>
                 
                 {showMenu && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-10">
+                  <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-10">
                     {canEdit && (
                       <button
                         onClick={() => {
                           setShowEditModal(true)
                           setShowMenu(false)
                         }}
-                        className="flex items-center space-x-3 w-full px-4 py-3 text-left hover:bg-gray-50 text-black"
+                        className="flex items-center space-x-2 w-full px-3 py-2 text-left hover:bg-gray-50 text-green-600 text-sm"
                       >
                         <Edit className="w-4 h-4" />
                         <span>編集</span>
@@ -174,7 +175,7 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
                           handleDelete()
                           setShowMenu(false)
                         }}
-                        className="flex items-center space-x-3 w-full px-4 py-3 text-left hover:bg-gray-50 text-red-600"
+                        className="flex items-center space-x-2 w-full px-3 py-2 text-left hover:bg-gray-50 text-red-600 text-sm"
                       >
                         <Trash2 className="w-4 h-4" />
                         <span>削除</span>
@@ -188,7 +189,7 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
 
           {/* Comments */}
           {showComments && (
-            <div className="mt-4 border-t border-gray-100 pt-4">
+            <div className="mt-6 border-t border-gray-100 pt-6">
               <CommentSection diaryId={diary.id} />
             </div>
           )}
