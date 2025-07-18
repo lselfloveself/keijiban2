@@ -38,10 +38,10 @@ const Header: React.FC<HeaderProps> = ({ onAdminClick }) => {
               <ElegantHeart className="text-orange-500" size="lg" />
             </div>
             <h1 className="text-xl font-bold text-black hidden sm:block">
-              かんじょうにっき掲示板
+              みんなの日記
             </h1>
             <h1 className="text-lg font-bold text-black sm:hidden">
-              掲示板
+              みんなの日記
             </h1>
           </div>
 
