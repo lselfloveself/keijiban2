@@ -6,6 +6,7 @@ import { Database } from '../lib/supabase'
 import CommentSection from './CommentSection'
 import EditDiaryModal from './EditDiaryModal'
 import ElegantHeart from './ElegantHeart'
+import { useAuth } from '../hooks/useAuth'
 
 type DiaryEntry = Database['public']['Tables']['diary']['Row']
 
@@ -17,55 +18,33 @@ interface DiaryCardProps {
   onUpdate?: (id: string, updates: Partial<DiaryEntry>) => void
 }
 
-// スクリーンショット参考のパステルカラー配列（8色）
-const getRandomColorClasses = () => {
-  const colors = [
-    { 
-      bg: 'bg-purple-50', 
-      border: 'border-purple-200',
-      heart: 'text-purple-500'
-    },
-    { 
-      bg: 'bg-blue-50', 
-      border: 'border-blue-200',
-      heart: 'text-blue-500'
-    },
-    { 
-      bg: 'bg-red-50', 
-      border: 'border-red-200',
-      heart: 'text-red-500'
-    },
-    { 
-      bg: 'bg-green-50', 
-      border: 'border-green-200',
-      heart: 'text-green-500'
-    },
-    { 
-      bg: 'bg-gray-50', 
-      border: 'border-gray-200',
-      heart: 'text-gray-500'
-    },
-    { 
-      bg: 'bg-orange-50', 
-      border: 'border-orange-200',
-      heart: 'text-orange-500'
-    },
-    { 
-      bg: 'bg-indigo-50', 
-      border: 'border-indigo-200',
-      heart: 'text-indigo-500'
-    },
-    { 
-      bg: 'bg-pink-50', 
-      border: 'border-pink-200',
-      heart: 'text-pink-500'
-    }
-  ]
+// 感情に応じた色を取得
+const getEmotionColorClasses = (emotion: string | null) => {
+  const emotionColors: Record<string, { bg: string; border: string; heart: string }> = {
+    // ネガティブな感情
+    'fear': { bg: 'bg-purple-50', border: 'border-purple-200', heart: 'text-purple-500' },
+    'sadness': { bg: 'bg-blue-50', border: 'border-blue-200', heart: 'text-blue-500' },
+    'anger': { bg: 'bg-red-50', border: 'border-red-200', heart: 'text-red-500' },
+    'disgust': { bg: 'bg-green-50', border: 'border-green-200', heart: 'text-green-500' },
+    'indifference': { bg: 'bg-gray-50', border: 'border-gray-200', heart: 'text-gray-500' },
+    'guilt': { bg: 'bg-orange-50', border: 'border-orange-200', heart: 'text-orange-500' },
+    'loneliness': { bg: 'bg-indigo-50', border: 'border-indigo-200', heart: 'text-indigo-500' },
+    'shame': { bg: 'bg-pink-50', border: 'border-pink-200', heart: 'text-pink-500' },
+    // ポジティブな感情
+    'joy': { bg: 'bg-yellow-50', border: 'border-yellow-200', heart: 'text-yellow-500' },
+    'gratitude': { bg: 'bg-teal-50', border: 'border-teal-200', heart: 'text-teal-500' },
+    'achievement': { bg: 'bg-lime-50', border: 'border-lime-200', heart: 'text-lime-500' },
+    'happiness': { bg: 'bg-amber-50', border: 'border-amber-200', heart: 'text-amber-500' }
+  }
   
-  // ランダムに色を選択
-  const index = Math.floor(Math.random() * colors.length)
-  return colors[index]
+  // 感情が指定されていない場合はデフォルトの色
+  return emotionColors[emotion || ''] || { 
+    bg: 'bg-gray-50', 
+    border: 'border-gray-200', 
+    heart: 'text-gray-500' 
+  }
 }
+
 const DiaryCard: React.FC<DiaryCardProps> = ({ 
   diary, 
   currentUserId, 
@@ -77,7 +56,8 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
   const [showMenu, setShowMenu] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
   const [liked, setLiked] = useState(false)
-  const [colors] = useState(() => getRandomColorClasses()) // 初回レンダリング時に色を決定
+  const { profile } = useAuth()
+  const colors = getEmotionColorClasses(diary.emotion) // 感情に応じた色を取得
 
   const isOwner = currentUserId === diary.user_id
   const canEdit = isOwner || isAdmin
@@ -101,6 +81,14 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
       'happiness': { label: '幸せ', color: 'bg-amber-100 text-amber-700 border-amber-200' }
     }
     return emotions[emotion || ''] || null
+  }
+
+  // 表示名を決定する関数
+  const getDisplayName = () => {
+    if (diary.nickname) {
+      return diary.nickname // 投稿時に設定された表示名
+    }
+    return '匿名' // 匿名の場合
   }
 
   const handleDelete = () => {
@@ -144,10 +132,10 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
         <div className="flex-1 min-w-0">
           <div className="flex items-center space-x-2 mb-3">
             <span className="font-bold text-gray-900 text-sm">
-              {diary.nickname || '匿名'}
+              {getDisplayName()}
             </span>
             <span className="text-gray-400 text-sm">
-              @{diary.nickname?.toLowerCase().replace(/\s+/g, '') || 'anonymous'}
+              @{getDisplayName().toLowerCase().replace(/\s+/g, '') || 'anonymous'}
             </span>
             <span className="text-gray-400">·</span>
             <span className="text-gray-400 text-xs">
