@@ -260,7 +260,7 @@ const Header: React.FC<HeaderProps> = ({ onAdminClick, onProfileClick }) => {
                   <span className="text-sm">
                     {isSigningIn ? 'ログイン中...' : 'Googleでログイン'}
                   </span>
-                </div>
+                </button>
               )}
             </div>
           </div>
