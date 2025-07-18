@@ -89,27 +89,27 @@ const CommentSection: React.FC<CommentSectionProps> = ({ diaryId }) => {
       {/* Comments List */}
       <div className="space-y-4">
         {comments.map((comment) => (
-          <div key={comment.id} className="flex space-x-3" data-heart-color={getRandomHeartColor()}>
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-white to-gray-50 border border-gray-200 flex items-center justify-center flex-shrink-0 shadow-sm hover:shadow-md transition-all duration-200">
+          <div key={comment.id} className="flex space-x-3 p-3 rounded-2xl bg-gradient-to-br from-white/50 to-purple-50/30 backdrop-blur-sm border border-purple-200/30 hover:shadow-md transition-all duration-200" data-heart-color={getRandomHeartColor()}>
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-white to-purple-50 border-2 border-purple-200/50 flex items-center justify-center flex-shrink-0 shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-110">
               <ElegantHeart className={getRandomHeartColor()} size="sm" />
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center space-x-2">
-                <span className="font-medium text-gray-900 text-xs">
+                <span className="font-semibold bg-gradient-to-r from-gray-800 to-purple-800 bg-clip-text text-transparent text-xs">
                   {comment.nickname || '匿名'}
                 </span>
-                <span className="text-gray-500 text-xs">
+                <span className="text-purple-500/70 text-xs font-medium">
                   @{comment.nickname?.toLowerCase().replace(/\s+/g, '') || 'anonymous'}
                 </span>
                 <span className="text-gray-400">·</span>
-                <span className="text-gray-500 text-xs">
+                <span className="text-gray-500/70 text-xs font-medium">
                   {formatDistanceToNow(new Date(comment.created_at), { 
                     addSuffix: true, 
                     locale: ja 
                   })}
                 </span>
               </div>
-              <p className="text-gray-800 text-xs mt-1 leading-relaxed">
+              <p className="text-gray-800 text-xs mt-1 leading-relaxed font-medium">
                 {comment.content}
               </p>
             </div>
@@ -118,9 +118,9 @@ const CommentSection: React.FC<CommentSectionProps> = ({ diaryId }) => {
       </div>
 
       {/* Add Comment Form */}
-      <form onSubmit={handleSubmit} className="border-t border-gray-100 pt-4 bg-gray-50 rounded-lg p-4 mt-4">
+      <form onSubmit={handleSubmit} className="border-t border-purple-200/50 pt-4 bg-gradient-to-br from-purple-50/50 to-white/50 backdrop-blur-sm rounded-2xl p-4 mt-4 shadow-sm">
         <div className="flex space-x-3">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-white to-gray-50 border border-gray-200 flex items-center justify-center flex-shrink-0 shadow-sm hover:shadow-md transition-all duration-200">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-white to-purple-50 border-2 border-purple-200/50 flex items-center justify-center flex-shrink-0 shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-110">
             <ElegantHeart className={getRandomHeartColor()} size="sm" />
           </div>
           <div className="flex-1">
@@ -128,7 +128,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ diaryId }) => {
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               placeholder="コメントを書く..."
-              className="w-full p-3 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-sm placeholder-gray-500"
+              className="w-full p-3 bg-white/80 backdrop-blur-sm border-2 border-purple-200/50 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-300 resize-none text-sm placeholder-purple-400 shadow-sm hover:shadow-md transition-all duration-200 font-medium"
               rows={2}
               maxLength={280}
             />
@@ -139,19 +139,19 @@ const CommentSection: React.FC<CommentSectionProps> = ({ diaryId }) => {
                   type="checkbox"
                   checked={isAnonymous}
                   onChange={(e) => setIsAnonymous(e.target.checked)}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-purple-300 text-purple-600 focus:ring-purple-500"
                 />
-                <span className="text-sm text-gray-600">匿名でコメント</span>
+                <span className="text-sm text-purple-600 font-medium">匿名でコメント</span>
               </label>
               
               <div className="flex items-center space-x-3">
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-purple-500 font-medium">
                   {280 - newComment.length}
                 </span>
                 <button
                   type="submit"
                   disabled={!newComment.trim() || isSubmitting}
-                  className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                  className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed text-sm transform hover:scale-105"
                 >
                   {isSubmitting ? (
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />

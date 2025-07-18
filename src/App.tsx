@@ -361,29 +361,34 @@ const BoardPage: React.FC = () => {
   }
 
   return (
-    <div className="main-layout">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
       <Header 
         onAdminClick={() => setShowAdminPanel(true)}
         onProfileClick={() => setShowProfilePage(true)}
       />
       
-      <main className="content-container">
+      <main className="max-w-6xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* メインコンテンツ */}
           <div className="lg:col-span-2 space-y-8">
             {/* 日記一覧 */}
-            <div className="card-soft">
+            <div className="bg-gradient-to-br from-white/80 to-purple-50/80 backdrop-blur-md rounded-3xl border-2 border-purple-200/50 p-8 shadow-2xl hover:shadow-3xl transition-all duration-300">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="section-header">みんなの日記</h2>
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg">
+                    <span className="text-white text-lg">📖</span>
+                  </div>
+                  <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">みんなの日記</h2>
+                </div>
                 
                 <div className="flex items-center space-x-3">
                   {/* テストデータ切り替えボタン */}
                   <button
                     onClick={() => setUseTestData(!useTestData)}
-                    className={`px-4 py-2 text-sm rounded-lg font-medium transition-colors ${
+                    className={`px-4 py-2 text-sm rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 ${
                       useTestData 
-                        ? 'bg-blue-100 text-blue-700 border border-blue-200' 
-                        : 'bg-gray-100 text-gray-700 border border-gray-200'
+                        ? 'bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-700 border-2 border-blue-300' 
+                        : 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 border-2 border-gray-300'
                     }`}
                   >
                     {useTestData ? 'テストモード' : '本番モード'}
@@ -392,7 +397,7 @@ const BoardPage: React.FC = () => {
                   <button
                     onClick={handleRefresh}
                     disabled={refreshing}
-                    className={`action-btn ${
+                    className={`p-2 rounded-xl hover:bg-white/50 transition-all duration-200 text-purple-600 hover:text-purple-700 shadow-md hover:shadow-lg transform hover:scale-105 ${
                       refreshing ? 'animate-spin' : ''
                     }`}
                   >
@@ -421,7 +426,7 @@ const BoardPage: React.FC = () => {
                     />
                   ))
                 ) : (
-                  <div className="text-center py-12">
+                  <div className="text-center py-12 bg-gradient-to-br from-gray-50/50 to-white/50 rounded-2xl border border-gray-200/50">
                     <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                       <TrendingUp className="w-8 h-8 text-gray-400" />
                     </div>

@@ -120,23 +120,23 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
   }
 
   return (
-    <article className={`rounded-2xl border-2 p-6 mb-4 hover:shadow-lg transition-all duration-200 transform hover:scale-[1.02] ${colors.bg} ${colors.border}`}>
+    <article className={`rounded-3xl border-2 p-6 mb-6 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] backdrop-blur-md ${colors.bg} ${colors.border} bg-gradient-to-br from-white/90 to-white/70`}>
       {/* Header */}
       <div className="flex items-start space-x-3">
-        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-white to-gray-50 border-2 border-gray-200 flex items-center justify-center flex-shrink-0 shadow-md hover:shadow-lg transition-all duration-200">
+        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-white to-gray-50 border-2 border-white/50 flex items-center justify-center flex-shrink-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110">
           <ElegantHeart className={colors.heart} size="md" />
         </div>
         
         <div className="flex-1 min-w-0">
           <div className="flex items-center space-x-2 mb-3">
-            <span className="font-bold text-gray-900 text-sm">
+            <span className="font-bold bg-gradient-to-r from-gray-800 to-gray-900 bg-clip-text text-transparent text-sm">
               {getDisplayName()}
             </span>
-            <span className="text-gray-400 text-sm">
+            <span className="text-gray-500/80 text-sm font-medium">
               @{getDisplayName().toLowerCase().replace(/\s+/g, '') || 'anonymous'}
             </span>
             <span className="text-gray-400">·</span>
-            <span className="text-gray-500 text-xs bg-gray-100 px-2 py-1 rounded-md">
+            <span className="text-gray-600 text-xs bg-gradient-to-r from-white/80 to-gray-50/80 px-3 py-1.5 rounded-full border border-gray-200/50 shadow-sm font-medium">
               {diary.created_at && new Date(diary.created_at).toLocaleDateString('ja-JP', {
                 year: 'numeric',
                 month: 'short',
@@ -144,7 +144,7 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
               })}
             </span>
             <span className="text-gray-400">·</span>
-            <span className="text-gray-400 text-xs">
+            <span className="text-gray-500/70 text-xs font-medium">
               {diary.created_at && formatDistanceToNow(new Date(diary.created_at), { 
                 addSuffix: true, 
                 locale: ja 
@@ -156,7 +156,7 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
           <div className="mt-3">
             {/* 感情バッジ */}
             {diary.emotion && getEmotionDisplay(diary.emotion) && (
-              <div className="mb-3">
+              <div className="mb-4">
                 <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getEmotionDisplay(diary.emotion)?.color}`}>
                   {getEmotionDisplay(diary.emotion)?.label}
                 </span>
@@ -164,12 +164,12 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
             )}
             
             {showFullContent ? (
-              <p className="text-gray-800 leading-relaxed whitespace-pre-wrap text-sm">
+              <p className="text-gray-800 leading-relaxed whitespace-pre-wrap text-sm font-medium">
                 {diary.content}
               </p>
             ) : (
               <Link to={`/diary/${diary.id}`} className="block hover:opacity-80 transition-opacity">
-                <p className="text-gray-800 leading-relaxed whitespace-pre-wrap text-sm">
+                <p className="text-gray-800 leading-relaxed whitespace-pre-wrap text-sm font-medium hover:text-gray-900 transition-colors">
                   {diary.content}
                 </p>
               </Link>
@@ -177,10 +177,10 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-between mt-6 max-w-md">
+          <div className="flex items-center justify-between mt-6 max-w-lg">
             <button 
               onClick={() => setShowComments(!showComments)}
-              className="flex items-center space-x-2 text-gray-500 hover:text-blue-500 hover:bg-blue-50 px-3 py-2 rounded-lg transition-colors group text-sm"
+              className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 px-4 py-2.5 rounded-xl transition-all duration-200 group text-sm font-medium shadow-sm hover:shadow-md transform hover:scale-105"
             >
               <MessageCircle className="w-4 h-4" />
               <span>コメント</span>
@@ -188,10 +188,10 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
             
             <button 
               onClick={handleLike}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors group text-sm ${
+              className={`flex items-center space-x-2 px-4 py-2.5 rounded-xl transition-all duration-200 group text-sm font-medium shadow-sm hover:shadow-md transform hover:scale-105 ${
                 liked 
-                  ? 'text-red-500 hover:bg-red-50' 
-                  : 'text-gray-500 hover:text-red-500 hover:bg-red-50'
+                  ? 'text-red-500 hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100' 
+                  : 'text-gray-600 hover:text-red-500 hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100'
               }`}
             >
               <ElegantHeart 
@@ -203,7 +203,7 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
             
             <button 
               onClick={handleShare}
-              className="flex items-center space-x-2 text-gray-500 hover:text-blue-500 hover:bg-blue-50 px-3 py-2 rounded-lg transition-colors group text-sm"
+              className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 px-4 py-2.5 rounded-xl transition-all duration-200 group text-sm font-medium shadow-sm hover:shadow-md transform hover:scale-105"
             >
               <Share className="w-4 h-4" />
               <span>Xでシェア</span>
@@ -213,20 +213,20 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
               <div className="relative">
                 <button 
                   onClick={() => setShowMenu(!showMenu)}
-                  className="action-btn"
+                  className="p-2.5 rounded-xl hover:bg-white/70 transition-all duration-200 text-gray-600 hover:text-gray-700 shadow-sm hover:shadow-md transform hover:scale-105"
                 >
                   <MoreHorizontal className="w-4 h-4" />
                 </button>
                 
                 {showMenu && (
-                  <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-10">
+                  <div className="absolute right-0 mt-2 w-44 bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-2xl border-2 border-gray-200/50 py-3 z-10 backdrop-blur-md">
                     {canEdit && (
                       <button
                         onClick={() => {
                           setShowEditModal(true)
                           setShowMenu(false)
                         }}
-                        className="flex items-center space-x-2 w-full px-3 py-2 text-left hover:bg-gray-50 text-green-600 text-sm"
+                        className="flex items-center space-x-2 w-full px-4 py-2.5 text-left hover:bg-gradient-to-r hover:from-green-50 hover:to-green-100 text-green-600 text-sm font-medium transition-all duration-200"
                       >
                         <Edit className="w-4 h-4" />
                         <span>編集</span>
@@ -238,7 +238,7 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
                           handleDelete()
                           setShowMenu(false)
                         }}
-                        className="flex items-center space-x-2 w-full px-3 py-2 text-left hover:bg-gray-50 text-red-600 text-sm"
+                        className="flex items-center space-x-2 w-full px-4 py-2.5 text-left hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 text-red-600 text-sm font-medium transition-all duration-200"
                       >
                         <Trash2 className="w-4 h-4" />
                         <span>削除</span>
@@ -252,7 +252,7 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
 
           {/* Comments */}
           {showComments && (
-            <div className="mt-6 border-t border-gray-100 pt-6">
+            <div className="mt-6 border-t border-gray-200/50 pt-6 bg-gradient-to-br from-gray-50/30 to-white/30 rounded-2xl p-4 backdrop-blur-sm">
               <CommentSection diaryId={diary.id} />
             </div>
           )}
