@@ -33,6 +33,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
   const [diaryNickname, setDiaryNickname] = useState('')
   const [isAnonymous, setIsAnonymous] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [selectedDate, setSelectedDate] = useState(new Date())
 
   useEffect(() => {
     if (profile) {
@@ -54,7 +55,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
         nickname: isAnonymous ? null : (diaryNickname.trim() || profile?.display_name || null),
         content: diaryContent.trim() + (insights.trim() ? '\n\n【今日の小さな気づき】\n' + insights.trim() : ''),
         emotion: selectedEmotion || null,
-        is_public: true
+        is_public: true,
+        created_at: selectedDate.toISOString()
       }
 
       if (onNewPost) {
@@ -66,6 +68,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
       setInsights('')
       setSelectedEmotion('')
       setIsAnonymous(false)
+      setSelectedDate(new Date())
       
       alert('日記を投稿しました！')
     } catch (error) {
@@ -188,12 +191,18 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
               <div className="bg-white rounded-2xl border border-gray-200 p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-gray-900">今日の出来事</h3>
-                  <div className="bg-gray-100 px-3 py-1 rounded-lg text-sm text-gray-600">
-                    {new Date().toLocaleDateString('ja-JP', { 
-                      month: 'long', 
-                      day: 'numeric',
-                      weekday: 'short'
-                    })}
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="date"
+                      value={selectedDate.toISOString().split('T')[0]}
+                      onChange={(e) => setSelectedDate(new Date(e.target.value + 'T00:00:00'))}
+                      className="bg-gray-100 px-3 py-1 rounded-lg text-sm text-gray-600 border-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all duration-200"
+                    />
+                    <div className="bg-gray-100 px-3 py-1 rounded-lg text-sm text-gray-600">
+                      {selectedDate.toLocaleDateString('ja-JP', { 
+                        weekday: 'short'
+                      })}
+                    </div>
                   </div>
                 </div>
                 
