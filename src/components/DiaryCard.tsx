@@ -59,6 +59,7 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
   const [showMenu, setShowMenu] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
   const [liked, setLiked] = useState(false)
+  const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 50) + 1) // テスト用のランダムないいね数
   const { profile } = useAuth()
   const colors = getEmotionColorClasses(diary.emotion) // 感情に応じた色を取得
 
@@ -108,7 +109,13 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
   }
 
   const handleLike = () => {
-    setLiked(!liked)
+    if (liked) {
+      setLiked(false)
+      setLikeCount(prev => prev - 1)
+    } else {
+      setLiked(true)
+      setLikeCount(prev => prev + 1)
+    }
   }
 
   const handleShare = () => {
@@ -199,6 +206,15 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
                 size="sm" 
               />
               <span>いいね</span>
+              {likeCount > 0 && (
+                <span className={`text-xs font-bold px-2 py-1 rounded-full ${
+                  liked 
+                    ? 'bg-red-100 text-red-700' 
+                    : 'bg-gray-100 text-gray-600'
+                }`}>
+                  {likeCount}
+                </span>
+              )}
             </button>
             
             <button 
