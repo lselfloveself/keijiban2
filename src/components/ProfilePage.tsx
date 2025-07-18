@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Camera, Save, X, User, Mail, Calendar, Shield, Settings, Upload, Trash2, Edit, Send } from 'lucide-react'
+import { Camera, Save, X, User, Mail, Calendar, Shield, Settings, Upload, Trash2, Edit, Send, Sparkles, Heart, Star } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
 import { supabase } from '../lib/supabase'
 import { formatDate } from '../utils/dateUtils'
@@ -119,40 +119,42 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
 
   return (
     <div className="modal-overlay">
-      <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
+      <div className="bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl border border-purple-200">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+        <div className="flex items-center justify-between p-6 border-b border-purple-200 bg-gradient-to-r from-purple-100 to-pink-100">
           <div className="flex items-center space-x-3">
-            <User className="w-6 h-6 text-blue-500" />
-            <h2 className="text-xl font-bold text-black">プロフィール設定</h2>
+            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
+              <Sparkles className="w-5 h-5 text-white" />
+            </div>
+            <h2 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">プロフィール設定</h2>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-2 hover:bg-white/50 rounded-full transition-all duration-200 hover:shadow-md"
           >
-            <X className="w-5 h-5 text-gray-500" />
+            <X className="w-5 h-5 text-purple-600" />
           </button>
         </div>
 
         {/* Tabs */}
-        <div className="flex border-b border-gray-200">
+        <div className="flex border-b border-purple-200 bg-white/70 backdrop-blur-sm">
           <button
             onClick={() => setActiveTab('diary')}
             className={`flex items-center space-x-2 px-6 py-4 font-medium transition-colors ${
               activeTab === 'diary'
-                ? 'text-black border-b-2 border-black'
-                : 'text-gray-500 hover:text-black'
+                ? 'text-purple-600 border-b-2 border-purple-500 bg-purple-50'
+                : 'text-gray-600 hover:text-purple-600 hover:bg-purple-50/50'
             }`}
           >
-            <Edit className="w-4 h-4" />
+            <Heart className="w-4 h-4" />
             <span>日記投稿</span>
           </button>
           <button
             onClick={() => setActiveTab('profile')}
             className={`flex items-center space-x-2 px-6 py-4 font-medium transition-colors ${
               activeTab === 'profile'
-                ? 'text-black border-b-2 border-black'
-                : 'text-gray-500 hover:text-black'
+                ? 'text-blue-600 border-b-2 border-blue-500 bg-blue-50'
+                : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50/50'
             }`}
           >
             <User className="w-4 h-4" />
@@ -162,8 +164,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
             onClick={() => setActiveTab('privacy')}
             className={`flex items-center space-x-2 px-6 py-4 font-medium transition-colors ${
               activeTab === 'privacy'
-                ? 'text-black border-b-2 border-black'
-                : 'text-gray-500 hover:text-black'
+                ? 'text-green-600 border-b-2 border-green-500 bg-green-50'
+                : 'text-gray-600 hover:text-green-600 hover:bg-green-50/50'
             }`}
           >
             <Shield className="w-4 h-4" />
@@ -173,8 +175,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
             onClick={() => setActiveTab('notifications')}
             className={`flex items-center space-x-2 px-6 py-4 font-medium transition-colors ${
               activeTab === 'notifications'
-                ? 'text-black border-b-2 border-black'
-                : 'text-gray-500 hover:text-black'
+                ? 'text-orange-600 border-b-2 border-orange-500 bg-orange-50'
+                : 'text-gray-600 hover:text-orange-600 hover:bg-orange-50/50'
             }`}
           >
             <Settings className="w-4 h-4" />
@@ -183,22 +185,27 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
         </div>
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto max-h-[60vh]">
+        <div className="p-6 overflow-y-auto max-h-[60vh] bg-white/30 backdrop-blur-sm">
           {/* Diary Tab */}
           {activeTab === 'diary' && (
             <div className="space-y-6">
               {/* 今日の出来事セクション */}
-              <div className="bg-white rounded-2xl border border-gray-200 p-6">
+              <div className="bg-gradient-to-br from-pink-50 to-rose-50 rounded-2xl border-2 border-pink-200 p-6 shadow-lg hover:shadow-xl transition-all duration-300">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900">今日の出来事</h3>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-gradient-to-br from-pink-400 to-rose-400 rounded-full flex items-center justify-center">
+                      <Heart className="w-4 h-4 text-white" />
+                    </div>
+                    <h3 className="text-lg font-semibold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">今日の出来事</h3>
+                  </div>
                   <div className="flex items-center space-x-2">
                     <input
                       type="date"
                       value={selectedDate.toISOString().split('T')[0]}
                       onChange={(e) => setSelectedDate(new Date(e.target.value + 'T00:00:00'))}
-                      className="bg-gray-100 px-3 py-1 rounded-lg text-sm text-gray-600 border-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all duration-200"
+                      className="bg-white/70 px-3 py-1 rounded-lg text-sm text-pink-700 border border-pink-200 focus:ring-2 focus:ring-pink-400 focus:bg-white transition-all duration-200 shadow-sm"
                     />
-                    <div className="bg-gray-100 px-3 py-1 rounded-lg text-sm text-gray-600">
+                    <div className="bg-white/70 px-3 py-1 rounded-lg text-sm text-pink-700 border border-pink-200 shadow-sm">
                       {selectedDate.toLocaleDateString('ja-JP', { 
                         weekday: 'short'
                       })}
@@ -206,57 +213,65 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
                   </div>
                 </div>
                 
-                <p className="text-sm text-gray-600 mb-4">今日の出来事を書いてみましょう</p>
+                <p className="text-sm text-pink-600 mb-4 font-medium">今日の出来事を書いてみましょう ✨</p>
                 
                 <div className="relative">
-                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-400 rounded-full"></div>
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-pink-400 to-rose-400 rounded-full shadow-sm"></div>
                   <textarea
                     value={diaryContent}
                     onChange={(e) => setDiaryContent(e.target.value)}
-                    className="w-full pl-6 pr-4 py-4 border-none outline-none resize-none text-base placeholder-gray-400 bg-transparent min-h-[200px]"
+                    className="w-full pl-6 pr-4 py-4 border-none outline-none resize-none text-base placeholder-pink-400 bg-white/50 rounded-lg min-h-[200px] focus:bg-white/80 transition-all duration-200"
                     placeholder=""
                     maxLength={280}
                   />
                 </div>
                 
-                <div className="bg-blue-50 rounded-lg p-4 mt-4">
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 mt-4 border border-blue-200 shadow-sm">
                   <div className="flex items-start space-x-2">
-                    <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <div className="w-6 h-6 bg-gradient-to-br from-blue-400 to-indigo-400 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
                       <span className="text-white text-xs">💡</span>
                     </div>
                     <div className="text-sm text-blue-800">
-                      <p className="font-medium">思い出すのがつらい場合は、無理をしないでください。</p>
-                      <p>書ける範囲で、あなたのペースで大丈夫です。</p>
+                      <p className="font-semibold">思い出すのがつらい場合は、無理をしないでください。</p>
+                      <p className="font-medium">書ける範囲で、あなたのペースで大丈夫です。</p>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* 今日の気持ちセクション */}
-              <div className="bg-white rounded-2xl border border-gray-200 p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">今日の気持ち</h3>
-                <p className="text-sm text-gray-600 mb-6">どの気持ちに近いですか？</p>
+              <div className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl border-2 border-purple-200 p-6 shadow-lg hover:shadow-xl transition-all duration-300">
+                <div className="flex items-center space-x-2 mb-2">
+                  <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-indigo-400 rounded-full flex items-center justify-center">
+                    <Star className="w-4 h-4 text-white" />
+                  </div>
+                  <h3 className="text-lg font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">今日の気持ち</h3>
+                </div>
+                <p className="text-sm text-purple-600 mb-6 font-medium">どの気持ちに近いですか？ 🌈</p>
                 
                 {/* ネガティブな感情 */}
                 <div className="mb-6">
-                  <h4 className="text-base font-medium text-gray-900 mb-4">ネガティブな感情</h4>
+                  <h4 className="text-base font-semibold text-gray-800 mb-4 flex items-center space-x-2">
+                    <span className="w-4 h-4 bg-gradient-to-r from-gray-400 to-gray-500 rounded-full"></span>
+                    <span>ネガティブな感情</span>
+                  </h4>
                   <div className="grid grid-cols-2 gap-3">
                     {[
-                      { id: 'fear', label: '恐怖', color: 'bg-purple-100 border-purple-200 text-purple-800' },
-                      { id: 'sadness', label: '悲しみ', color: 'bg-blue-100 border-blue-200 text-blue-800' },
-                      { id: 'anger', label: '怒り', color: 'bg-red-100 border-red-200 text-red-800' },
-                      { id: 'disgust', label: '悔しい', color: 'bg-green-100 border-green-200 text-green-800' },
-                      { id: 'indifference', label: '無価値感', color: 'bg-gray-100 border-gray-200 text-gray-800' },
-                      { id: 'guilt', label: '罪悪感', color: 'bg-orange-100 border-orange-200 text-orange-800' },
-                      { id: 'loneliness', label: '寂しさ', color: 'bg-indigo-100 border-indigo-200 text-indigo-800' },
-                      { id: 'shame', label: '恥ずかしさ', color: 'bg-pink-100 border-pink-200 text-pink-800' }
+                      { id: 'fear', label: '恐怖', color: 'bg-gradient-to-br from-purple-100 to-purple-200 border-purple-300 text-purple-800 shadow-sm hover:shadow-md' },
+                      { id: 'sadness', label: '悲しみ', color: 'bg-gradient-to-br from-blue-100 to-blue-200 border-blue-300 text-blue-800 shadow-sm hover:shadow-md' },
+                      { id: 'anger', label: '怒り', color: 'bg-gradient-to-br from-red-100 to-red-200 border-red-300 text-red-800 shadow-sm hover:shadow-md' },
+                      { id: 'disgust', label: '悔しい', color: 'bg-gradient-to-br from-green-100 to-green-200 border-green-300 text-green-800 shadow-sm hover:shadow-md' },
+                      { id: 'indifference', label: '無価値感', color: 'bg-gradient-to-br from-gray-100 to-gray-200 border-gray-300 text-gray-800 shadow-sm hover:shadow-md' },
+                      { id: 'guilt', label: '罪悪感', color: 'bg-gradient-to-br from-orange-100 to-orange-200 border-orange-300 text-orange-800 shadow-sm hover:shadow-md' },
+                      { id: 'loneliness', label: '寂しさ', color: 'bg-gradient-to-br from-indigo-100 to-indigo-200 border-indigo-300 text-indigo-800 shadow-sm hover:shadow-md' },
+                      { id: 'shame', label: '恥ずかしさ', color: 'bg-gradient-to-br from-pink-100 to-pink-200 border-pink-300 text-pink-800 shadow-sm hover:shadow-md' }
                     ].map((emotion) => (
                       <label
                         key={emotion.id}
-                        className={`flex items-center space-x-3 p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 hover:shadow-sm ${
+                        className={`flex items-center space-x-3 p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 transform hover:scale-105 ${
                           selectedEmotion === emotion.id 
-                            ? `${emotion.color} ring-2 ring-offset-2 ring-blue-500` 
-                            : `${emotion.color} hover:shadow-md`
+                            ? `${emotion.color} ring-2 ring-offset-2 ring-purple-400 shadow-lg` 
+                            : `${emotion.color}`
                         }`}
                       >
                         <input
@@ -269,11 +284,11 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
                         />
                         <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
                           selectedEmotion === emotion.id 
-                            ? 'border-blue-500 bg-blue-500' 
-                            : 'border-gray-300 bg-white'
+                            ? 'border-purple-500 bg-gradient-to-br from-purple-400 to-purple-500 shadow-sm' 
+                            : 'border-gray-300 bg-white shadow-sm'
                         }`}>
                           {selectedEmotion === emotion.id && (
-                            <div className="w-2 h-2 bg-white rounded-full"></div>
+                            <div className="w-2 h-2 bg-white rounded-full shadow-sm"></div>
                           )}
                         </div>
                         <span className="font-medium">{emotion.label}</span>
@@ -284,20 +299,23 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
 
                 {/* ポジティブな感情 */}
                 <div className="mb-6">
-                  <h4 className="text-base font-medium text-gray-900 mb-4">ポジティブな感情</h4>
+                  <h4 className="text-base font-semibold text-gray-800 mb-4 flex items-center space-x-2">
+                    <span className="w-4 h-4 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full"></span>
+                    <span>ポジティブな感情</span>
+                  </h4>
                   <div className="grid grid-cols-2 gap-3">
                     {[
-                      { id: 'joy', label: '嬉しい', color: 'bg-yellow-100 border-yellow-200 text-yellow-800' },
-                      { id: 'gratitude', label: '感謝', color: 'bg-teal-100 border-teal-200 text-teal-800' },
-                      { id: 'achievement', label: '達成感', color: 'bg-lime-100 border-lime-200 text-lime-800' },
-                      { id: 'happiness', label: '幸せ', color: 'bg-amber-100 border-amber-200 text-amber-800' }
+                      { id: 'joy', label: '嬉しい', color: 'bg-gradient-to-br from-yellow-100 to-yellow-200 border-yellow-300 text-yellow-800 shadow-sm hover:shadow-md' },
+                      { id: 'gratitude', label: '感謝', color: 'bg-gradient-to-br from-teal-100 to-teal-200 border-teal-300 text-teal-800 shadow-sm hover:shadow-md' },
+                      { id: 'achievement', label: '達成感', color: 'bg-gradient-to-br from-lime-100 to-lime-200 border-lime-300 text-lime-800 shadow-sm hover:shadow-md' },
+                      { id: 'happiness', label: '幸せ', color: 'bg-gradient-to-br from-amber-100 to-amber-200 border-amber-300 text-amber-800 shadow-sm hover:shadow-md' }
                     ].map((emotion) => (
                       <label
                         key={emotion.id}
-                        className={`flex items-center space-x-3 p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 hover:shadow-sm ${
+                        className={`flex items-center space-x-3 p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 transform hover:scale-105 ${
                           selectedEmotion === emotion.id 
-                            ? `${emotion.color} ring-2 ring-offset-2 ring-blue-500` 
-                            : `${emotion.color} hover:shadow-md`
+                            ? `${emotion.color} ring-2 ring-offset-2 ring-purple-400 shadow-lg` 
+                            : `${emotion.color}`
                         }`}
                       >
                         <input
@@ -310,11 +328,11 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
                         />
                         <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
                           selectedEmotion === emotion.id 
-                            ? 'border-blue-500 bg-blue-500' 
-                            : 'border-gray-300 bg-white'
+                            ? 'border-purple-500 bg-gradient-to-br from-purple-400 to-purple-500 shadow-sm' 
+                            : 'border-gray-300 bg-white shadow-sm'
                         }`}>
                           {selectedEmotion === emotion.id && (
-                            <div className="w-2 h-2 bg-white rounded-full"></div>
+                            <div className="w-2 h-2 bg-white rounded-full shadow-sm"></div>
                           )}
                         </div>
                         <span className="font-medium">{emotion.label}</span>
@@ -325,15 +343,20 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
               </div>
 
               {/* 今日の小さな気づきセクション */}
-              <div className="bg-white rounded-2xl border border-gray-200 p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">今日の小さな気づき</h3>
+              <div className="bg-gradient-to-br from-green-50 to-teal-50 rounded-2xl border-2 border-green-200 p-6 shadow-lg hover:shadow-xl transition-all duration-300">
+                <div className="flex items-center space-x-2 mb-4">
+                  <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-teal-400 rounded-full flex items-center justify-center">
+                    <Sparkles className="w-4 h-4 text-white" />
+                  </div>
+                  <h3 className="text-lg font-semibold bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">今日の小さな気づき</h3>
+                </div>
                 
                 <div className="relative">
-                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-400 rounded-full"></div>
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-green-400 to-teal-400 rounded-full shadow-sm"></div>
                   <textarea
                     value={insights}
                     onChange={(e) => setInsights(e.target.value)}
-                    className="w-full pl-6 pr-4 py-4 border-none outline-none resize-none text-base placeholder-gray-400 bg-transparent min-h-[120px]"
+                    className="w-full pl-6 pr-4 py-4 border-none outline-none resize-none text-base placeholder-green-400 bg-white/50 rounded-lg min-h-[120px] focus:bg-white/80 transition-all duration-200"
                     placeholder=""
                     maxLength={280}
                   />
@@ -341,11 +364,11 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
               </div>
 
               {/* 表示名設定と投稿ボタン */}
-              <form onSubmit={handleDiarySubmit} className="bg-white rounded-2xl border border-gray-200 p-6">
+              <form onSubmit={handleDiarySubmit} className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl border-2 border-blue-200 p-6 shadow-lg hover:shadow-xl transition-all duration-300">
                 <div className="space-y-4">
                   <div>
                     <div className="flex items-center justify-between mb-3">
-                      <label className="text-sm font-medium text-gray-900">
+                      <label className="text-sm font-semibold text-blue-800">
                         表示名
                       </label>
                       <label className="flex items-center space-x-2">
@@ -353,9 +376,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
                           type="checkbox"
                           checked={isAnonymous}
                           onChange={(e) => setIsAnonymous(e.target.checked)}
-                          className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                          className="rounded border-blue-300 text-blue-600 focus:ring-blue-500 shadow-sm"
                         />
-                        <span className="text-sm text-gray-600">匿名で投稿</span>
+                        <span className="text-sm text-blue-600 font-medium">匿名で投稿</span>
                       </label>
                     </div>
                     <input
@@ -363,22 +386,23 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
                       value={diaryNickname}
                       onChange={(e) => setDiaryNickname(e.target.value)}
                       disabled={isAnonymous}
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-50 disabled:text-gray-500"
+                      className="w-full px-3 py-2 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-blue-50/50 disabled:text-blue-400 bg-white/70 shadow-sm"
                       placeholder={profile?.display_name || "表示名を入力..."}
                     />
                   </div>
                   
-                  <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                    <div className="text-sm text-gray-500">
-                      投稿後、掲示板に表示されます
+                  <div className="flex items-center justify-between pt-4 border-t border-blue-200">
+                    <div className="text-sm text-blue-600 font-medium flex items-center space-x-1">
+                      <Heart className="w-4 h-4" />
+                      <span>投稿後、掲示板に表示されます</span>
                     </div>
                     <button
                       type="submit"
                       disabled={!diaryContent.trim() || isSubmitting}
-                      className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-600 hover:to-cyan-600 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105"
                     >
                       {isSubmitting ? (
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2 inline-block" />
                       ) : (
                         <Send className="w-4 h-4 mr-2" />
                       )}
@@ -392,18 +416,18 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
 
           {/* Profile Tab */}
           {activeTab === 'profile' && (
-            <div className="space-y-6">
+            <div className="space-y-6 bg-gradient-to-br from-blue-50/50 to-indigo-50/50 rounded-2xl p-6">
               {/* Avatar Section */}
-              <div className="flex items-center space-x-6">
+              <div className="flex items-center space-x-6 bg-white/70 rounded-2xl p-6 border border-blue-200 shadow-lg">
                 <div className="relative">
                   {avatarUrl ? (
                     <img
                       src={avatarUrl}
                       alt="プロフィール画像"
-                      className="w-24 h-24 rounded-full object-cover border-4 border-gray-200"
+                      className="w-24 h-24 rounded-full object-cover border-4 border-blue-200 shadow-lg"
                     />
                   ) : (
-                    <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center border-4 border-gray-200">
+                    <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center border-4 border-blue-200 shadow-lg">
                       <ElegantHeart className="text-white" size="lg" />
                     </div>
                   )}
@@ -411,7 +435,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
                   {avatarUrl && (
                     <button
                       onClick={handleDeleteAvatar}
-                      className="absolute -top-2 -right-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+                      className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-red-400 to-red-500 text-white rounded-full flex items-center justify-center hover:from-red-500 hover:to-red-600 transition-all duration-200 shadow-lg"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -419,11 +443,11 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
                 </div>
                 
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-black mb-2">プロフィール画像</h3>
-                  <p className="text-sm text-gray-600 mb-4">
+                  <h3 className="text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">プロフィール画像</h3>
+                  <p className="text-sm text-blue-600 mb-4 font-medium">
                     JPEGまたはPNG形式、最大5MBまで
                   </p>
-                  <label className="btn-secondary cursor-pointer inline-flex items-center">
+                  <label className="bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 px-6 py-3 rounded-xl font-semibold hover:from-blue-200 hover:to-purple-200 transition-all duration-200 cursor-pointer inline-flex items-center shadow-md hover:shadow-lg transform hover:scale-105">
                     <Upload className="w-4 h-4 mr-2" />
                     画像をアップロード
                     <input
@@ -437,64 +461,64 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
               </div>
 
               {/* Basic Info */}
-              <div className="space-y-4">
+              <div className="space-y-4 bg-white/70 rounded-2xl p-6 border border-blue-200 shadow-lg">
                 <div>
-                  <label className="block text-sm font-medium text-black mb-2">
+                  <label className="block text-sm font-semibold text-blue-800 mb-2">
                     表示名 *
                   </label>
                   <input
                     type="text"
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
-                    className="form-input"
+                    className="w-full px-4 py-3 border border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/70 shadow-sm"
                     placeholder="表示名を入力してください"
                     maxLength={50}
                     required
                   />
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-blue-500 mt-1 font-medium">
                     {50 - displayName.length} 文字残り
                   </p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-black mb-2">
+                  <label className="block text-sm font-semibold text-blue-800 mb-2">
                     自己紹介
                   </label>
                   <textarea
                     value={bio}
                     onChange={(e) => setBio(e.target.value)}
-                    className="form-textarea"
+                    className="w-full px-4 py-3 border border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none min-h-[120px] bg-white/70 shadow-sm"
                     placeholder="自己紹介を書いてください..."
                     maxLength={160}
                     rows={3}
                   />
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-blue-500 mt-1 font-medium">
                     {160 - bio.length} 文字残り
                   </p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-black mb-2">
+                  <label className="block text-sm font-semibold text-blue-800 mb-2">
                     ウェブサイト
                   </label>
                   <input
                     type="url"
                     value={website}
                     onChange={(e) => setWebsite(e.target.value)}
-                    className="form-input"
+                    className="w-full px-4 py-3 border border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/70 shadow-sm"
                     placeholder="https://example.com"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-black mb-2">
+                  <label className="block text-sm font-semibold text-blue-800 mb-2">
                     場所
                   </label>
                   <input
                     type="text"
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
-                    className="form-input"
+                    className="w-full px-4 py-3 border border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/70 shadow-sm"
                     placeholder="東京, 日本"
                     maxLength={30}
                   />
@@ -502,25 +526,25 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
               </div>
 
               {/* Account Info */}
-              <div className="bg-gray-50 rounded-xl p-4">
-                <h3 className="text-sm font-semibold text-black mb-3">アカウント情報</h3>
+              <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-6 border border-indigo-200 shadow-lg">
+                <h3 className="text-sm font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-3">アカウント情報</h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center space-x-2">
-                    <Mail className="w-4 h-4 text-gray-500" />
-                    <span className="text-gray-600">メール:</span>
-                    <span className="text-black">{user?.email}</span>
+                    <Mail className="w-4 h-4 text-indigo-500" />
+                    <span className="text-indigo-600 font-medium">メール:</span>
+                    <span className="text-indigo-800 font-semibold">{user?.email}</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Calendar className="w-4 h-4 text-gray-500" />
-                    <span className="text-gray-600">登録日:</span>
-                    <span className="text-black">
+                    <Calendar className="w-4 h-4 text-indigo-500" />
+                    <span className="text-indigo-600 font-medium">登録日:</span>
+                    <span className="text-indigo-800 font-semibold">
                       {profile?.created_at && formatDate(new Date(profile.created_at))}
                     </span>
                   </div>
                   {profile?.is_admin && (
                     <div className="flex items-center space-x-2">
-                      <Shield className="w-4 h-4 text-yellow-500" />
-                      <span className="text-yellow-600 font-medium">管理者アカウント</span>
+                      <Shield className="w-4 h-4 text-yellow-400" />
+                      <span className="text-yellow-600 font-bold">管理者アカウント</span>
                     </div>
                   )}
                 </div>
@@ -530,12 +554,12 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
 
           {/* Privacy Tab */}
           {activeTab === 'privacy' && (
-            <div className="space-y-6">
+            <div className="space-y-6 bg-gradient-to-br from-green-50/50 to-emerald-50/50 rounded-2xl p-6">
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
+                <div className="flex items-center justify-between p-6 border-2 border-green-200 rounded-xl bg-white/70 shadow-lg">
                   <div>
-                    <h3 className="font-medium text-black">プロフィールを公開</h3>
-                    <p className="text-sm text-gray-600">
+                    <h3 className="font-semibold text-green-800">プロフィールを公開</h3>
+                    <p className="text-sm text-green-600 font-medium">
                       他のユーザーがあなたのプロフィールを見ることができます
                     </p>
                   </div>
@@ -546,26 +570,26 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
                       onChange={(e) => setIsPublic(e.target.checked)}
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-green-400 peer-checked:to-emerald-400 shadow-sm"></div>
                   </label>
                 </div>
 
-                <div className="p-4 border border-gray-200 rounded-xl">
-                  <h3 className="font-medium text-black mb-2">データのダウンロード</h3>
-                  <p className="text-sm text-gray-600 mb-4">
+                <div className="p-6 border-2 border-green-200 rounded-xl bg-white/70 shadow-lg">
+                  <h3 className="font-semibold text-green-800 mb-2">データのダウンロード</h3>
+                  <p className="text-sm text-green-600 mb-4 font-medium">
                     あなたの投稿データをダウンロードできます
                   </p>
-                  <button className="btn-secondary">
+                  <button className="bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 px-6 py-3 rounded-xl font-semibold hover:from-green-200 hover:to-emerald-200 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105">
                     データをダウンロード
                   </button>
                 </div>
 
-                <div className="p-4 border border-red-200 rounded-xl bg-red-50">
-                  <h3 className="font-medium text-red-800 mb-2">アカウントの削除</h3>
-                  <p className="text-sm text-red-600 mb-4">
+                <div className="p-6 border-2 border-red-200 rounded-xl bg-gradient-to-br from-red-50 to-pink-50 shadow-lg">
+                  <h3 className="font-semibold text-red-800 mb-2">アカウントの削除</h3>
+                  <p className="text-sm text-red-600 mb-4 font-medium">
                     アカウントを削除すると、すべてのデータが永久に失われます
                   </p>
-                  <button className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors">
+                  <button className="bg-gradient-to-r from-red-400 to-pink-400 text-white px-6 py-3 rounded-xl font-semibold hover:from-red-500 hover:to-pink-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
                     アカウントを削除
                   </button>
                 </div>
@@ -575,12 +599,12 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
 
           {/* Notifications Tab */}
           {activeTab === 'notifications' && (
-            <div className="space-y-6">
+            <div className="space-y-6 bg-gradient-to-br from-orange-50/50 to-amber-50/50 rounded-2xl p-6">
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
+                <div className="flex items-center justify-between p-6 border-2 border-orange-200 rounded-xl bg-white/70 shadow-lg">
                   <div>
-                    <h3 className="font-medium text-black">メール通知</h3>
-                    <p className="text-sm text-gray-600">
+                    <h3 className="font-semibold text-orange-800">メール通知</h3>
+                    <p className="text-sm text-orange-600 font-medium">
                       新しいコメントや返信をメールで受け取る
                     </p>
                   </div>
@@ -591,40 +615,40 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
                       onChange={(e) => setEmailNotifications(e.target.checked)}
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-orange-400 peer-checked:to-amber-400 shadow-sm"></div>
                   </label>
                 </div>
 
-                <div className="p-4 border border-gray-200 rounded-xl">
-                  <h3 className="font-medium text-black mb-4">通知の頻度</h3>
+                <div className="p-6 border-2 border-orange-200 rounded-xl bg-white/70 shadow-lg">
+                  <h3 className="font-semibold text-orange-800 mb-4">通知の頻度</h3>
                   <div className="space-y-2">
                     <label className="flex items-center space-x-3">
                       <input
                         type="radio"
                         name="frequency"
                         value="immediate"
-                        className="text-blue-600"
+                        className="text-orange-600 focus:ring-orange-500"
                         defaultChecked
                       />
-                      <span className="text-sm text-gray-700">即座に通知</span>
+                      <span className="text-sm text-orange-700 font-medium">即座に通知</span>
                     </label>
                     <label className="flex items-center space-x-3">
                       <input
                         type="radio"
                         name="frequency"
                         value="daily"
-                        className="text-blue-600"
+                        className="text-orange-600 focus:ring-orange-500"
                       />
-                      <span className="text-sm text-gray-700">1日1回まとめて</span>
+                      <span className="text-sm text-orange-700 font-medium">1日1回まとめて</span>
                     </label>
                     <label className="flex items-center space-x-3">
                       <input
                         type="radio"
                         name="frequency"
                         value="weekly"
-                        className="text-blue-600"
+                        className="text-orange-600 focus:ring-orange-500"
                       />
-                      <span className="text-sm text-gray-700">週1回まとめて</span>
+                      <span className="text-sm text-orange-700 font-medium">週1回まとめて</span>
                     </label>
                   </div>
                 </div>
@@ -634,20 +658,20 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between p-6 border-t border-gray-200">
+        <div className="flex items-center justify-between p-6 border-t border-purple-200 bg-gradient-to-r from-purple-100 to-pink-100">
           <button
             onClick={onClose}
-            className="btn-secondary"
+            className="bg-white/70 text-purple-700 px-6 py-3 rounded-xl font-semibold hover:bg-white transition-all duration-200 border border-purple-200 shadow-md hover:shadow-lg"
           >
             キャンセル
           </button>
           <button
             onClick={handleSaveProfile}
             disabled={isSaving || !displayName.trim()}
-            className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105"
           >
             {isSaving ? (
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2 inline-block" />
             ) : (
               <Save className="w-4 h-4 mr-2" />
             )}
