@@ -120,8 +120,9 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
 
   const handleShare = () => {
     const diaryUrl = `${window.location.origin}/diary/${diary.id}`
-    const shareText = `${getDisplayName()}さんの日記 📖\n\n${diary.content?.substring(0, 120)}${diary.content && diary.content.length > 120 ? '...' : ''}\n\n✨ みんなの日記で感情を共有しよう\n#かんじょうにっき掲示板 #日記 #感情日記`
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(diaryUrl)}`
+    const shareText = `${getDisplayName()}さんの日記\n\n${diary.content?.substring(0, 50)}${diary.content && diary.content.length > 50 ? '...' : ''}\n\n#かんじょうにっき仲間で繋がりたい\n#かんじょうにっき #感情日記 #自己肯定感 #みんなの日記`
+    const shareUrl = 'https://namisapo.vercel.app/'
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`
     
     window.open(twitterUrl, '_blank', 'width=550,height=420')
   }
