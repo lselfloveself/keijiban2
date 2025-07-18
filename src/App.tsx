@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { RefreshCw, TrendingUp, BookOpen } from 'lucide-react'
+import { RefreshCw, TrendingUp } from 'lucide-react'
 import Header from './components/Header'
 import DiaryCard from './components/DiaryCard'
+import SearchFilter, { FilterOptions } from './components/SearchFilter'
 import AdminPanel from './components/AdminPanel'
 import ProfilePage from './components/ProfilePage'
 import { useAuth } from './hooks/useAuth'
@@ -63,6 +64,13 @@ function App() {
   const [refreshing, setRefreshing] = useState(false)
   const [showAdminPanel, setShowAdminPanel] = useState(false)
   const [showProfilePage, setShowProfilePage] = useState(false)
+  const [filteredDiaries, setFilteredDiaries] = useState<DiaryEntry[]>([])
+  const [searchFilters, setSearchFilters] = useState<FilterOptions>({
+    keyword: '',
+    username: '',
+    dateFrom: '',
+    dateTo: ''
+  })
   const [useTestData, setUseTestData] = useState(true) // テストデータ使用フラグ
   const { user, profile, loading: authLoading } = useAuth()
 
@@ -71,6 +79,7 @@ function App() {
       if (useTestData) {
         // テストデータを使用
         setDiaries(mockDiaries)
+        setFilteredDiaries(mockDiaries)
         setLoading(false)
       } else {
         fetchDiaries()
@@ -89,6 +98,7 @@ function App() {
 
       if (error) throw error
       setDiaries(data || [])
+      setFilteredDiaries(data || [])
     } catch (error) {
       console.error('Error fetching diaries:', error)
     } finally {
@@ -101,6 +111,7 @@ function App() {
     if (useTestData) {
       // テストデータの場合はローカルで削除
       setDiaries(prev => prev.filter(diary => diary.id !== diaryId))
+      setFilteredDiaries(prev => prev.filter(diary => diary.id !== diaryId))
       return
     }
 
@@ -113,6 +124,7 @@ function App() {
       if (error) throw error
       
       setDiaries(prev => prev.filter(diary => diary.id !== diaryId))
+      setFilteredDiaries(prev => prev.filter(diary => diary.id !== diaryId))
     } catch (error) {
       console.error('Error deleting diary:', error)
       alert('削除に失敗しました')
@@ -123,6 +135,11 @@ function App() {
     if (useTestData) {
       // テストデータの場合はローカルで更新
       setDiaries(prev => 
+        prev.map(diary => 
+          diary.id === diaryId ? { ...diary, ...updates } : diary
+        )
+      )
+      setFilteredDiaries(prev => 
         prev.map(diary => 
           diary.id === diaryId ? { ...diary, ...updates } : diary
         )
@@ -139,6 +156,11 @@ function App() {
       if (error) throw error
       
       setDiaries(prev => 
+        prev.map(diary => 
+          diary.id === diaryId ? { ...diary, ...updates } : diary
+        )
+      )
+      setFilteredDiaries(prev => 
         prev.map(diary => 
           diary.id === diaryId ? { ...diary, ...updates } : diary
         )
@@ -160,10 +182,12 @@ function App() {
     if (useTestData) {
       // テストデータの場合はローカルで追加
       setDiaries(prev => [newPost, ...prev])
+      setFilteredDiaries(prev => [newPost, ...prev])
     } else {
       // 本番の場合はSupabaseに保存（実装時）
       // TODO: Supabase実装時にここを更新
       setDiaries(prev => [newPost, ...prev])
+      setFilteredDiaries(prev => [newPost, ...prev])
     }
 
     setShowPostForm(false)
@@ -175,11 +199,57 @@ function App() {
       setRefreshing(true)
       setTimeout(() => {
         setDiaries([...mockDiaries])
+        setFilteredDiaries([...mockDiaries])
         setRefreshing(false)
       }, 500)
     } else {
       fetchDiaries()
     }
+  }
+
+  const handleFilterChange = (filters: FilterOptions) => {
+    setSearchFilters(filters)
+    
+    let filtered = [...diaries]
+    
+    // キーワード検索
+    if (filters.keyword.trim()) {
+      const keyword = filters.keyword.toLowerCase().trim()
+      filtered = filtered.filter(diary => 
+        diary.content?.toLowerCase().includes(keyword)
+      )
+    }
+    
+    // ユーザー名検索
+    if (filters.username.trim()) {
+      const username = filters.username.toLowerCase().trim()
+      filtered = filtered.filter(diary => 
+        diary.nickname?.toLowerCase().includes(username)
+      )
+    }
+    
+    // 日付範囲フィルター
+    if (filters.dateFrom) {
+      const fromDate = new Date(filters.dateFrom)
+      fromDate.setHours(0, 0, 0, 0)
+      filtered = filtered.filter(diary => {
+        if (!diary.created_at) return false
+        const diaryDate = new Date(diary.created_at)
+        return diaryDate >= fromDate
+      })
+    }
+    
+    if (filters.dateTo) {
+      const toDate = new Date(filters.dateTo)
+      toDate.setHours(23, 59, 59, 999)
+      filtered = filtered.filter(diary => {
+        if (!diary.created_at) return false
+        const diaryDate = new Date(diary.created_at)
+        return diaryDate <= toDate
+      })
+    }
+    
+    setFilteredDiaries(filtered)
   }
   if (authLoading || loading) {
     return (
@@ -233,9 +303,16 @@ function App() {
                 </div>
               </div>
               
+              {/* 検索フィルター */}
+              <SearchFilter
+                onFilterChange={handleFilterChange}
+                totalCount={diaries.length}
+                filteredCount={filteredDiaries.length}
+              />
+              
               <div className="space-y-6">
-                {diaries.length > 0 ? (
-                  diaries.map((diary) => (
+                {filteredDiaries.length > 0 ? (
+                  filteredDiaries.map((diary) => (
                     <DiaryCard
                       key={diary.id}
                       diary={diary}
@@ -250,12 +327,25 @@ function App() {
                     <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                       <TrendingUp className="w-8 h-8 text-gray-400" />
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">
-                      まだ投稿がありません
-                    </h3>
-                    <p className="text-gray-500 max-w-sm mx-auto">
-                      プロフィールページから日記を投稿すると、ここに表示されます。
-                    </p>
+                    {diaries.length === 0 ? (
+                      <>
+                        <h3 className="text-xl font-bold text-gray-900 mb-2">
+                          まだ投稿がありません
+                        </h3>
+                        <p className="text-gray-500 max-w-sm mx-auto">
+                          プロフィールページから日記を投稿すると、ここに表示されます。
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <h3 className="text-xl font-bold text-gray-900 mb-2">
+                          検索条件に一致する日記が見つかりません
+                        </h3>
+                        <p className="text-gray-500 max-w-sm mx-auto">
+                          検索条件を変更して再度お試しください。
+                        </p>
+                      </>
+                    )}
                   </div>
                 )}
               </div>
