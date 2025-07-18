@@ -131,7 +131,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onClose }) => {
           user_id: profile?.id,
           nickname: '管理者',
           content: `【${newThreadTitle}】\n\n${newThreadContent}`,
-          emotion: '📢',
+          emotion: null,
           is_public: true
         }])
 
@@ -325,9 +325,6 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onClose }) => {
                               locale: ja 
                             })}
                           </span>
-                          {post.emotion && (
-                            <span className="text-sm">{post.emotion}</span>
-                          )}
                         </div>
                         <p className="text-black leading-relaxed whitespace-pre-wrap">
                           {post.content}
