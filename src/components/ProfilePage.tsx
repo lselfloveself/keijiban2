@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react'
-import { Camera, Save, X, User, Mail, Calendar, Shield, Settings, Upload, Trash2 } from 'lucide-react'
+import { Camera, Save, X, User, Mail, Calendar, Shield, Settings, Upload, Trash2, Edit, Send } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
 import { supabase } from '../lib/supabase'
 import { formatDate } from '../utils/dateUtils'
 import ElegantHeart from './ElegantHeart'
+import { Database } from '../lib/supabase'
+
+type DiaryEntry = Database['public']['Tables']['diary']['Row']
 
 interface ProfilePageProps {
   onClose: () => void
+  onNewPost?: (post: Omit<DiaryEntry, 'id' | 'created_at'>) => void
 }
 
-const ProfilePage: React.FC<ProfilePageProps> = ({ onClose }) => {
+const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
   const { user, profile } = useAuth()
   const [displayName, setDisplayName] = useState('')
   const [bio, setBio] = useState('')
@@ -20,15 +24,53 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose }) => {
   const [emailNotifications, setEmailNotifications] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
-  const [activeTab, setActiveTab] = useState<'profile' | 'privacy' | 'notifications'>('profile')
+  const [activeTab, setActiveTab] = useState<'diary' | 'profile' | 'privacy' | 'notifications'>('diary')
+  
+  // 日記投稿用の状態
+  const [diaryContent, setDiaryContent] = useState('')
+  const [diaryNickname, setDiaryNickname] = useState('')
+  const [isAnonymous, setIsAnonymous] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     if (profile) {
       setDisplayName(profile.display_name || '')
       setAvatarUrl(profile.avatar_url || '')
+      setDiaryNickname(profile.display_name || '')
       // 追加のプロフィール情報があれば設定
     }
   }, [profile])
+
+  const handleDiarySubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!diaryContent.trim() || isSubmitting) return
+
+    setIsSubmitting(true)
+    try {
+      const postData = {
+        user_id: user?.id || 'anonymous-user',
+        nickname: isAnonymous ? null : (diaryNickname.trim() || profile?.display_name || null),
+        content: diaryContent.trim(),
+        emotion: null,
+        is_public: true
+      }
+
+      if (onNewPost) {
+        onNewPost(postData)
+      }
+      
+      // フォームをリセット
+      setDiaryContent('')
+      setIsAnonymous(false)
+      
+      alert('日記を投稿しました！')
+    } catch (error) {
+      console.error('Error posting diary:', error)
+      alert('投稿に失敗しました')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   const handleSaveProfile = async () => {
     if (!user) return
@@ -88,6 +130,17 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose }) => {
         {/* Tabs */}
         <div className="flex border-b border-gray-200">
           <button
+            onClick={() => setActiveTab('diary')}
+            className={`flex items-center space-x-2 px-6 py-4 font-medium transition-colors ${
+              activeTab === 'diary'
+                ? 'text-black border-b-2 border-black'
+                : 'text-gray-500 hover:text-black'
+            }`}
+          >
+            <Edit className="w-4 h-4" />
+            <span>日記投稿</span>
+          </button>
+          <button
             onClick={() => setActiveTab('profile')}
             className={`flex items-center space-x-2 px-6 py-4 font-medium transition-colors ${
               activeTab === 'profile'
@@ -124,6 +177,85 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose }) => {
 
         {/* Content */}
         <div className="p-6 overflow-y-auto max-h-[60vh]">
+          {/* Diary Tab */}
+          {activeTab === 'diary' && (
+            <div className="space-y-6">
+              <div className="text-center mb-6">
+                <h3 className="text-lg font-semibold text-black mb-2">新しい日記を書く</h3>
+                <p className="text-sm text-gray-600">
+                  あなたの日記は掲示板で他のユーザーと共有されます
+                </p>
+              </div>
+
+              <form onSubmit={handleDiarySubmit} className="space-y-6">
+                {/* 日記内容 */}
+                <div>
+                  <label className="block text-sm font-medium text-black mb-2">
+                    日記の内容 *
+                  </label>
+                  <textarea
+                    value={diaryContent}
+                    onChange={(e) => setDiaryContent(e.target.value)}
+                    className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-lg placeholder-gray-400 bg-white min-h-[150px]"
+                    placeholder="今日はどんな一日でしたか？"
+                    maxLength={280}
+                    required
+                  />
+                  <div className="flex justify-between items-center mt-2">
+                    <span className="text-sm text-gray-500">
+                      {280 - diaryContent.length} 文字残り
+                    </span>
+                  </div>
+                </div>
+
+                {/* 表示名設定 */}
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <label className="text-sm font-medium text-black">
+                      表示名
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        checked={isAnonymous}
+                        onChange={(e) => setIsAnonymous(e.target.checked)}
+                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      />
+                      <span className="text-sm text-gray-600">匿名で投稿</span>
+                    </label>
+                  </div>
+                  <input
+                    type="text"
+                    value={diaryNickname}
+                    onChange={(e) => setDiaryNickname(e.target.value)}
+                    disabled={isAnonymous}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-50 disabled:text-gray-500"
+                    placeholder={profile?.display_name || "表示名を入力..."}
+                  />
+                </div>
+
+                {/* 投稿ボタン */}
+                <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+                  <div className="text-sm text-gray-500">
+                    投稿後、掲示板に表示されます
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={!diaryContent.trim() || isSubmitting}
+                    className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isSubmitting ? (
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                    ) : (
+                      <Send className="w-4 h-4 mr-2" />
+                    )}
+                    日記を投稿
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+
           {/* Profile Tab */}
           {activeTab === 'profile' && (
             <div className="space-y-6">

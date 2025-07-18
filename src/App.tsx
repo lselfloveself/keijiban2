@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { RefreshCw, TrendingUp, Plus } from 'lucide-react'
+import { RefreshCw, TrendingUp, BookOpen } from 'lucide-react'
 import Header from './components/Header'
 import DiaryCard from './components/DiaryCard'
-import PostForm from './components/PostForm'
 import AdminPanel from './components/AdminPanel'
 import ProfilePage from './components/ProfilePage'
 import { useAuth } from './hooks/useAuth'
@@ -63,7 +62,6 @@ function App() {
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const [showAdminPanel, setShowAdminPanel] = useState(false)
-  const [showPostForm, setShowPostForm] = useState(false)
   const [showProfilePage, setShowProfilePage] = useState(false)
   const [useTestData, setUseTestData] = useState(true) // テストデータ使用フラグ
   const { user, profile, loading: authLoading } = useAuth()
@@ -205,22 +203,27 @@ function App() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* メインコンテンツ */}
           <div className="lg:col-span-2 space-y-8">
-            {/* 投稿フォーム */}
-            {showPostForm ? (
-              <PostForm onPost={handleNewPost} />
-            ) : (
-              <div className="card-soft">
+            {/* 投稿案内 */}
+            <div className="card-soft">
+              <div className="text-center py-8">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                  <BookOpen className="w-8 h-8 text-blue-500" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  日記を書きませんか？
+                </h3>
+                <p className="text-gray-600 mb-4 max-w-md mx-auto">
+                  プロフィールページから新しい日記を投稿できます。あなたの日記を他のユーザーと共有しましょう。
+                </p>
                 <button
-                  onClick={() => setShowPostForm(true)}
-                  className="w-full flex items-center space-x-3 p-4 text-left hover:bg-gray-50 rounded-xl transition-colors"
+                  onClick={() => setShowProfilePage(true)}
+                  className="btn-primary"
                 >
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-white to-gray-50 border-2 border-gray-200 flex items-center justify-center flex-shrink-0 shadow-md">
-                    <Plus className="w-6 h-6 text-gray-400" />
-                  </div>
-                  <span className="text-xl text-gray-400">今日はどんな一日でしたか？</span>
+                  <BookOpen className="w-4 h-4 mr-2" />
+                  日記を書く
                 </button>
               </div>
-            )}
+            </div>
 
             {/* 直近の日記 */}
             <div className="card-soft">
@@ -273,7 +276,7 @@ function App() {
                       まだ投稿がありません
                     </h3>
                     <p className="text-gray-500 max-w-sm mx-auto">
-                      かんじょうにっきアプリで「公開」を選択した日記が、ここに表示されます。
+                      プロフィールページから日記を投稿すると、ここに表示されます。
                     </p>
                   </div>
                 )}
@@ -295,7 +298,10 @@ function App() {
 
       {/* Profile Page */}
       {showProfilePage && (
-        <ProfilePage onClose={() => setShowProfilePage(false)} />
+        <ProfilePage 
+          onClose={() => setShowProfilePage(false)}
+          onNewPost={handleNewPost}
+        />
       )}
     </div>
   )
