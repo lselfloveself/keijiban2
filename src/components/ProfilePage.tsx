@@ -28,6 +28,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
   
   // 日記投稿用の状態
   const [diaryContent, setDiaryContent] = useState('')
+  const [insights, setInsights] = useState('')
+  const [selectedEmotion, setSelectedEmotion] = useState('')
   const [diaryNickname, setDiaryNickname] = useState('')
   const [isAnonymous, setIsAnonymous] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -50,8 +52,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
       const postData = {
         user_id: user?.id || 'anonymous-user',
         nickname: isAnonymous ? null : (diaryNickname.trim() || profile?.display_name || null),
-        content: diaryContent.trim(),
-        emotion: null,
+        content: diaryContent.trim() + (insights.trim() ? '\n\n【今日の小さな気づき】\n' + insights.trim() : ''),
+        emotion: selectedEmotion || null,
         is_public: true
       }
 
@@ -61,6 +63,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
       
       // フォームをリセット
       setDiaryContent('')
+      setInsights('')
+      setSelectedEmotion('')
       setIsAnonymous(false)
       
       alert('日記を投稿しました！')
@@ -180,77 +184,198 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
           {/* Diary Tab */}
           {activeTab === 'diary' && (
             <div className="space-y-6">
-              <div className="text-center mb-6">
-                <h3 className="text-lg font-semibold text-black mb-2">新しい日記を書く</h3>
-                <p className="text-sm text-gray-600">
-                  あなたの日記は掲示板で他のユーザーと共有されます
-                </p>
-              </div>
-
-              <form onSubmit={handleDiarySubmit} className="space-y-6">
-                {/* 日記内容 */}
-                <div>
-                  <label className="block text-sm font-medium text-black mb-2">
-                    日記の内容 *
-                  </label>
+              {/* 今日の出来事セクション */}
+              <div className="bg-white rounded-2xl border border-gray-200 p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900">今日の出来事</h3>
+                  <div className="bg-gray-100 px-3 py-1 rounded-lg text-sm text-gray-600">
+                    {new Date().toLocaleDateString('ja-JP', { 
+                      month: 'long', 
+                      day: 'numeric',
+                      weekday: 'short'
+                    })}
+                  </div>
+                </div>
+                
+                <p className="text-sm text-gray-600 mb-4">今日の出来事を書いてみましょう</p>
+                
+                <div className="relative">
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-400 rounded-full"></div>
                   <textarea
                     value={diaryContent}
                     onChange={(e) => setDiaryContent(e.target.value)}
-                    className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-lg placeholder-gray-400 bg-white min-h-[150px]"
-                    placeholder="今日はどんな一日でしたか？"
+                    className="w-full pl-6 pr-4 py-4 border-none outline-none resize-none text-base placeholder-gray-400 bg-transparent min-h-[200px]"
+                    placeholder=""
                     maxLength={280}
-                    required
                   />
-                  <div className="flex justify-between items-center mt-2">
-                    <span className="text-sm text-gray-500">
-                      {280 - diaryContent.length} 文字残り
-                    </span>
+                </div>
+                
+                <div className="bg-blue-50 rounded-lg p-4 mt-4">
+                  <div className="flex items-start space-x-2">
+                    <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-white text-xs">💡</span>
+                    </div>
+                    <div className="text-sm text-blue-800">
+                      <p className="font-medium">思い出すのがつらい場合は、無理をしないでください。</p>
+                      <p>書ける範囲で、あなたのペースで大丈夫です。</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 今日の気持ちセクション */}
+              <div className="bg-white rounded-2xl border border-gray-200 p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">今日の気持ち</h3>
+                <p className="text-sm text-gray-600 mb-6">どの気持ちに近いですか？</p>
+                
+                {/* ネガティブな感情 */}
+                <div className="mb-6">
+                  <h4 className="text-base font-medium text-gray-900 mb-4">ネガティブな感情</h4>
+                  <div className="grid grid-cols-2 gap-3">
+                    {[
+                      { id: 'fear', label: '恐怖', color: 'bg-purple-100 border-purple-200 text-purple-800' },
+                      { id: 'sadness', label: '悲しみ', color: 'bg-blue-100 border-blue-200 text-blue-800' },
+                      { id: 'anger', label: '怒り', color: 'bg-red-100 border-red-200 text-red-800' },
+                      { id: 'disgust', label: '悔しい', color: 'bg-green-100 border-green-200 text-green-800' },
+                      { id: 'indifference', label: '無価値感', color: 'bg-gray-100 border-gray-200 text-gray-800' },
+                      { id: 'guilt', label: '罪悪感', color: 'bg-orange-100 border-orange-200 text-orange-800' },
+                      { id: 'loneliness', label: '寂しさ', color: 'bg-indigo-100 border-indigo-200 text-indigo-800' },
+                      { id: 'shame', label: '恥ずかしさ', color: 'bg-pink-100 border-pink-200 text-pink-800' }
+                    ].map((emotion) => (
+                      <label
+                        key={emotion.id}
+                        className={`flex items-center space-x-3 p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 hover:shadow-sm ${
+                          selectedEmotion === emotion.id 
+                            ? `${emotion.color} ring-2 ring-offset-2 ring-blue-500` 
+                            : `${emotion.color} hover:shadow-md`
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="emotion"
+                          value={emotion.id}
+                          checked={selectedEmotion === emotion.id}
+                          onChange={(e) => setSelectedEmotion(e.target.value)}
+                          className="sr-only"
+                        />
+                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                          selectedEmotion === emotion.id 
+                            ? 'border-blue-500 bg-blue-500' 
+                            : 'border-gray-300 bg-white'
+                        }`}>
+                          {selectedEmotion === emotion.id && (
+                            <div className="w-2 h-2 bg-white rounded-full"></div>
+                          )}
+                        </div>
+                        <span className="font-medium">{emotion.label}</span>
+                      </label>
+                    ))}
                   </div>
                 </div>
 
-                {/* 表示名設定 */}
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <label className="text-sm font-medium text-black">
-                      表示名
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        checked={isAnonymous}
-                        onChange={(e) => setIsAnonymous(e.target.checked)}
-                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                      />
-                      <span className="text-sm text-gray-600">匿名で投稿</span>
-                    </label>
+                {/* ポジティブな感情 */}
+                <div className="mb-6">
+                  <h4 className="text-base font-medium text-gray-900 mb-4">ポジティブな感情</h4>
+                  <div className="grid grid-cols-2 gap-3">
+                    {[
+                      { id: 'joy', label: '嬉しい', color: 'bg-yellow-100 border-yellow-200 text-yellow-800' },
+                      { id: 'gratitude', label: '感謝', color: 'bg-teal-100 border-teal-200 text-teal-800' },
+                      { id: 'achievement', label: '達成感', color: 'bg-lime-100 border-lime-200 text-lime-800' },
+                      { id: 'happiness', label: '幸せ', color: 'bg-amber-100 border-amber-200 text-amber-800' }
+                    ].map((emotion) => (
+                      <label
+                        key={emotion.id}
+                        className={`flex items-center space-x-3 p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 hover:shadow-sm ${
+                          selectedEmotion === emotion.id 
+                            ? `${emotion.color} ring-2 ring-offset-2 ring-blue-500` 
+                            : `${emotion.color} hover:shadow-md`
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="emotion"
+                          value={emotion.id}
+                          checked={selectedEmotion === emotion.id}
+                          onChange={(e) => setSelectedEmotion(e.target.value)}
+                          className="sr-only"
+                        />
+                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                          selectedEmotion === emotion.id 
+                            ? 'border-blue-500 bg-blue-500' 
+                            : 'border-gray-300 bg-white'
+                        }`}>
+                          {selectedEmotion === emotion.id && (
+                            <div className="w-2 h-2 bg-white rounded-full"></div>
+                          )}
+                        </div>
+                        <span className="font-medium">{emotion.label}</span>
+                      </label>
+                    ))}
                   </div>
-                  <input
-                    type="text"
-                    value={diaryNickname}
-                    onChange={(e) => setDiaryNickname(e.target.value)}
-                    disabled={isAnonymous}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-50 disabled:text-gray-500"
-                    placeholder={profile?.display_name || "表示名を入力..."}
+                </div>
+              </div>
+
+              {/* 今日の小さな気づきセクション */}
+              <div className="bg-white rounded-2xl border border-gray-200 p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">今日の小さな気づき</h3>
+                
+                <div className="relative">
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-400 rounded-full"></div>
+                  <textarea
+                    value={insights}
+                    onChange={(e) => setInsights(e.target.value)}
+                    className="w-full pl-6 pr-4 py-4 border-none outline-none resize-none text-base placeholder-gray-400 bg-transparent min-h-[120px]"
+                    placeholder=""
+                    maxLength={280}
                   />
                 </div>
+              </div>
 
-                {/* 投稿ボタン */}
-                <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                  <div className="text-sm text-gray-500">
-                    投稿後、掲示板に表示されます
+              {/* 表示名設定と投稿ボタン */}
+              <form onSubmit={handleDiarySubmit} className="bg-white rounded-2xl border border-gray-200 p-6">
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <label className="text-sm font-medium text-gray-900">
+                        表示名
+                      </label>
+                      <label className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          checked={isAnonymous}
+                          onChange={(e) => setIsAnonymous(e.target.checked)}
+                          className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                        />
+                        <span className="text-sm text-gray-600">匿名で投稿</span>
+                      </label>
+                    </div>
+                    <input
+                      type="text"
+                      value={diaryNickname}
+                      onChange={(e) => setDiaryNickname(e.target.value)}
+                      disabled={isAnonymous}
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-50 disabled:text-gray-500"
+                      placeholder={profile?.display_name || "表示名を入力..."}
+                    />
                   </div>
-                  <button
-                    type="submit"
-                    disabled={!diaryContent.trim() || isSubmitting}
-                    className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isSubmitting ? (
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                    ) : (
-                      <Send className="w-4 h-4 mr-2" />
-                    )}
-                    日記を投稿
-                  </button>
+                  
+                  <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+                    <div className="text-sm text-gray-500">
+                      投稿後、掲示板に表示されます
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={!diaryContent.trim() || isSubmitting}
+                      className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isSubmitting ? (
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                      ) : (
+                        <Send className="w-4 h-4 mr-2" />
+                      )}
+                      日記を投稿
+                    </button>
+                  </div>
                 </div>
               </form>
             </div>

@@ -4,6 +4,7 @@ import { Search, Filter, X, Calendar, User, Hash } from 'lucide-react'
 export interface FilterOptions {
   keyword: string
   username: string
+  emotion: string
   dateFrom: string
   dateTo: string
 }
@@ -23,6 +24,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
   const [filters, setFilters] = useState<FilterOptions>({
     keyword: '',
     username: '',
+    emotion: '',
     dateFrom: '',
     dateTo: ''
   })
@@ -37,6 +39,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
     const emptyFilters: FilterOptions = {
       keyword: '',
       username: '',
+      emotion: '',
       dateFrom: '',
       dateTo: ''
     }
@@ -116,6 +119,37 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                 placeholder="ユーザー名で絞り込み..."
                 className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
+            </div>
+
+            {/* Emotion Filter */}
+            <div>
+              <label className="flex items-center space-x-2 text-sm font-medium text-gray-700 mb-2">
+                <Hash className="w-4 h-4" />
+                <span>感情</span>
+              </label>
+              <select
+                value={filters.emotion}
+                onChange={(e) => handleFilterChange('emotion', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">すべての感情</option>
+                <optgroup label="ネガティブな感情">
+                  <option value="fear">恐怖</option>
+                  <option value="sadness">悲しみ</option>
+                  <option value="anger">怒り</option>
+                  <option value="disgust">悔しい</option>
+                  <option value="indifference">無価値感</option>
+                  <option value="guilt">罪悪感</option>
+                  <option value="loneliness">寂しさ</option>
+                  <option value="shame">恥ずかしさ</option>
+                </optgroup>
+                <optgroup label="ポジティブな感情">
+                  <option value="joy">嬉しい</option>
+                  <option value="gratitude">感謝</option>
+                  <option value="achievement">達成感</option>
+                  <option value="happiness">幸せ</option>
+                </optgroup>
+              </select>
             </div>
 
             {/* Date From */}

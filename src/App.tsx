@@ -68,6 +68,7 @@ function App() {
   const [searchFilters, setSearchFilters] = useState<FilterOptions>({
     keyword: '',
     username: '',
+    emotion: '',
     dateFrom: '',
     dateTo: ''
   })
@@ -225,6 +226,13 @@ function App() {
       const username = filters.username.toLowerCase().trim()
       filtered = filtered.filter(diary => 
         diary.nickname?.toLowerCase().includes(username)
+      )
+    }
+    
+    // 感情検索
+    if (filters.emotion.trim()) {
+      filtered = filtered.filter(diary => 
+        diary.emotion === filters.emotion
       )
     }
     

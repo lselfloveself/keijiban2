@@ -83,16 +83,24 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
   const canEdit = isOwner || isAdmin
   const canDelete = isOwner || isAdmin
 
-  const getEmotionColor = (emotion: string | null) => {
-    const colors: Record<string, string> = {
-      '😊': 'bg-yellow-50 text-yellow-600 border-yellow-200',
-      '😢': 'bg-blue-50 text-blue-600 border-blue-200',
-      '😡': 'bg-red-50 text-red-600 border-red-200',
-      '😴': 'bg-purple-50 text-purple-600 border-purple-200',
-      '😰': 'bg-gray-50 text-gray-600 border-gray-200',
-      '😍': 'bg-pink-50 text-pink-600 border-pink-200',
+  const getEmotionDisplay = (emotion: string | null) => {
+    const emotions: Record<string, { label: string; color: string }> = {
+      // ネガティブな感情
+      'fear': { label: '恐怖', color: 'bg-purple-100 text-purple-700 border-purple-200' },
+      'sadness': { label: '悲しみ', color: 'bg-blue-100 text-blue-700 border-blue-200' },
+      'anger': { label: '怒り', color: 'bg-red-100 text-red-700 border-red-200' },
+      'disgust': { label: '悔しい', color: 'bg-green-100 text-green-700 border-green-200' },
+      'indifference': { label: '無価値感', color: 'bg-gray-100 text-gray-700 border-gray-200' },
+      'guilt': { label: '罪悪感', color: 'bg-orange-100 text-orange-700 border-orange-200' },
+      'loneliness': { label: '寂しさ', color: 'bg-indigo-100 text-indigo-700 border-indigo-200' },
+      'shame': { label: '恥ずかしさ', color: 'bg-pink-100 text-pink-700 border-pink-200' },
+      // ポジティブな感情
+      'joy': { label: '嬉しい', color: 'bg-yellow-100 text-yellow-700 border-yellow-200' },
+      'gratitude': { label: '感謝', color: 'bg-teal-100 text-teal-700 border-teal-200' },
+      'achievement': { label: '達成感', color: 'bg-lime-100 text-lime-700 border-lime-200' },
+      'happiness': { label: '幸せ', color: 'bg-amber-100 text-amber-700 border-amber-200' }
     }
-    return colors[emotion || ''] || 'bg-gray-50 text-gray-600 border-gray-200'
+    return emotions[emotion || ''] || null
   }
 
   const handleDelete = () => {
@@ -152,6 +160,15 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
 
           {/* Content */}
           <div className="mt-3">
+            {/* 感情バッジ */}
+            {diary.emotion && getEmotionDisplay(diary.emotion) && (
+              <div className="mb-3">
+                <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getEmotionDisplay(diary.emotion)?.color}`}>
+                  {getEmotionDisplay(diary.emotion)?.label}
+                </span>
+              </div>
+            )}
+            
             <p className="text-gray-800 leading-relaxed whitespace-pre-wrap text-sm">
               {diary.content}
             </p>
