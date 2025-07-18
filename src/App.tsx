@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { RefreshCw, TrendingUp } from 'lucide-react'
+import { RefreshCw, TrendingUp, Plus } from 'lucide-react'
 import Header from './components/Header'
 import DiaryCard from './components/DiaryCard'
+import PostForm from './components/PostForm'
 import AdminPanel from './components/AdminPanel'
 import { useAuth } from './hooks/useAuth'
 import { supabase, Database } from './lib/supabase'
@@ -61,6 +62,7 @@ function App() {
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const [showAdminPanel, setShowAdminPanel] = useState(false)
+  const [showPostForm, setShowPostForm] = useState(false)
   const [useTestData, setUseTestData] = useState(true) // テストデータ使用フラグ
   const { user, profile, loading: authLoading } = useAuth()
 
@@ -147,6 +149,26 @@ function App() {
     }
   }
 
+  const handleNewPost = (postData: Omit<DiaryEntry, 'id' | 'created_at'>) => {
+    // 新しい投稿を作成
+    const newPost: DiaryEntry = {
+      id: `post-${Date.now()}`,
+      created_at: new Date().toISOString(),
+      ...postData
+    }
+
+    if (useTestData) {
+      // テストデータの場合はローカルで追加
+      setDiaries(prev => [newPost, ...prev])
+    } else {
+      // 本番の場合はSupabaseに保存（実装時）
+      // TODO: Supabase実装時にここを更新
+      setDiaries(prev => [newPost, ...prev])
+    }
+
+    setShowPostForm(false)
+  }
+
   const handleRefresh = () => {
     if (useTestData) {
       // テストデータをリフレッシュ
@@ -178,6 +200,23 @@ function App() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* メインコンテンツ */}
           <div className="lg:col-span-2 space-y-8">
+            {/* 投稿フォーム */}
+            {showPostForm ? (
+              <PostForm onPost={handleNewPost} />
+            ) : (
+              <div className="card-soft">
+                <button
+                  onClick={() => setShowPostForm(true)}
+                  className="w-full flex items-center space-x-3 p-4 text-left hover:bg-gray-50 rounded-xl transition-colors"
+                >
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-white to-gray-50 border-2 border-gray-200 flex items-center justify-center flex-shrink-0 shadow-md">
+                    <Plus className="w-6 h-6 text-gray-400" />
+                  </div>
+                  <span className="text-xl text-gray-400">今日はどんな一日でしたか？</span>
+                </button>
+              </div>
+            )}
+
             {/* 直近の日記 */}
             <div className="card-soft">
               <div className="flex items-center justify-between mb-6">
