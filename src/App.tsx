@@ -203,32 +203,10 @@ function App() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* メインコンテンツ */}
           <div className="lg:col-span-2 space-y-8">
-            {/* 投稿案内 */}
-            <div className="card-soft">
-              <div className="text-center py-8">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                  <BookOpen className="w-8 h-8 text-blue-500" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
-                  日記を書きませんか？
-                </h3>
-                <p className="text-gray-600 mb-4 max-w-md mx-auto">
-                  プロフィールページから新しい日記を投稿できます。あなたの日記を他のユーザーと共有しましょう。
-                </p>
-                <button
-                  onClick={() => setShowProfilePage(true)}
-                  className="btn-primary"
-                >
-                  <BookOpen className="w-4 h-4 mr-2" />
-                  日記を書く
-                </button>
-              </div>
-            </div>
-
-            {/* 直近の日記 */}
+            {/* 日記一覧 */}
             <div className="card-soft">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="section-header">直近の日記（最大10件）</h2>
+                <h2 className="section-header">みんなの日記</h2>
                 
                 <div className="flex items-center space-x-3">
                   {/* テストデータ切り替えボタン */}
