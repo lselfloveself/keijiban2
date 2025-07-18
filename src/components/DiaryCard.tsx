@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { MessageCircle, MoreHorizontal, Edit, Trash2, Share } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { ja } from 'date-fns/locale'
@@ -14,6 +15,7 @@ interface DiaryCardProps {
   diary: DiaryEntry
   currentUserId?: string
   isAdmin?: boolean
+  showFullContent?: boolean
   onDelete?: (id: string) => void
   onUpdate?: (id: string, updates: Partial<DiaryEntry>) => void
 }
@@ -49,6 +51,7 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
   diary, 
   currentUserId, 
   isAdmin = false,
+  showFullContent = false,
   onDelete,
   onUpdate
 }) => {
@@ -109,16 +112,11 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
   }
 
   const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: 'かんじょうにっき掲示板',
-        text: diary.content?.substring(0, 100) + '...',
-        url: window.location.href
-      })
-    } else {
-      navigator.clipboard.writeText(window.location.href)
-      alert('URLをコピーしました')
-    }
+    const diaryUrl = `${window.location.origin}/diary/${diary.id}`
+    const shareText = `${getDisplayName()}さんの日記\n\n${diary.content?.substring(0, 100)}${diary.content && diary.content.length > 100 ? '...' : ''}\n\n#かんじょうにっき掲示板`
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(diaryUrl)}`
+    
+    window.open(twitterUrl, '_blank', 'width=550,height=420')
   }
 
   return (
@@ -165,9 +163,17 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
               </div>
             )}
             
-            <p className="text-gray-800 leading-relaxed whitespace-pre-wrap text-sm">
-              {diary.content}
-            </p>
+            {showFullContent ? (
+              <p className="text-gray-800 leading-relaxed whitespace-pre-wrap text-sm">
+                {diary.content}
+              </p>
+            ) : (
+              <Link to={`/diary/${diary.id}`} className="block hover:opacity-80 transition-opacity">
+                <p className="text-gray-800 leading-relaxed whitespace-pre-wrap text-sm">
+                  {diary.content}
+                </p>
+              </Link>
+            )}
           </div>
 
           {/* Actions */}
@@ -197,10 +203,10 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
             
             <button 
               onClick={handleShare}
-              className="flex items-center space-x-2 text-gray-500 hover:text-green-500 hover:bg-green-50 px-3 py-2 rounded-lg transition-colors group text-sm"
+              className="flex items-center space-x-2 text-gray-500 hover:text-blue-500 hover:bg-blue-50 px-3 py-2 rounded-lg transition-colors group text-sm"
             >
               <Share className="w-4 h-4" />
-              <span>共有</span>
+              <span>Xでシェア</span>
             </button>
 
             {canEdit && (

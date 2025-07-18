@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Routes, Route, useParams, useNavigate } from 'react-router-dom'
 import { RefreshCw, TrendingUp } from 'lucide-react'
 import Header from './components/Header'
 import DiaryCard from './components/DiaryCard'
@@ -58,7 +59,95 @@ const mockDiaries: DiaryEntry[] = [
     is_public: true
   }
 ]
-function App() {
+// 個別日記ページコンポーネント
+const DiaryDetailPage: React.FC = () => {
+  const { diaryId } = useParams<{ diaryId: string }>()
+  const navigate = useNavigate()
+  const [diary, setDiary] = useState<DiaryEntry | null>(null)
+  const [loading, setLoading] = useState(true)
+  const { user, profile } = useAuth()
+
+  useEffect(() => {
+    if (diaryId) {
+      // テストデータから該当の日記を検索
+      const foundDiary = mockDiaries.find(d => d.id === diaryId)
+      if (foundDiary) {
+        setDiary(foundDiary)
+      }
+      setLoading(false)
+    }
+  }, [diaryId])
+
+  const handleDeleteDiary = async (diaryId: string) => {
+    // 削除後はホームに戻る
+    navigate('/')
+  }
+
+  const handleUpdateDiary = async (diaryId: string, updates: Partial<DiaryEntry>) => {
+    if (diary) {
+      setDiary({ ...diary, ...updates })
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white">
+        <Header />
+        <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
+        </div>
+      </div>
+    )
+  }
+
+  if (!diary) {
+    return (
+      <div className="min-h-screen bg-white">
+        <Header />
+        <div className="max-w-2xl mx-auto px-4 py-8">
+          <div className="text-center py-12">
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">日記が見つかりません</h1>
+            <p className="text-gray-600 mb-6">指定された日記は存在しないか、削除された可能性があります。</p>
+            <button
+              onClick={() => navigate('/')}
+              className="btn-primary"
+            >
+              ホームに戻る
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="main-layout">
+      <Header />
+      <main className="max-w-2xl mx-auto px-4 py-8">
+        <div className="mb-6">
+          <button
+            onClick={() => navigate('/')}
+            className="text-blue-500 hover:text-blue-600 text-sm font-medium"
+          >
+            ← 掲示板に戻る
+          </button>
+        </div>
+        
+        <DiaryCard
+          diary={diary}
+          currentUserId={user?.id}
+          isAdmin={profile?.is_admin || false}
+          onDelete={handleDeleteDiary}
+          onUpdate={handleUpdateDiary}
+          showFullContent={true}
+        />
+      </main>
+    </div>
+  )
+}
+
+// メインの掲示板ページコンポーネント
+const BoardPage: React.FC = () => {
   const [diaries, setDiaries] = useState<DiaryEntry[]>([])
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
@@ -259,6 +348,7 @@ function App() {
     
     setFilteredDiaries(filtered)
   }
+
   if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-white">
@@ -380,6 +470,16 @@ function App() {
         />
       )}
     </div>
+  )
+}
+
+// メインのAppコンポーネント
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<BoardPage />} />
+      <Route path="/diary/:diaryId" element={<DiaryDetailPage />} />
+    </Routes>
   )
 }
 
