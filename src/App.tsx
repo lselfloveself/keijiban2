@@ -161,7 +161,7 @@ const BoardPage: React.FC = () => {
     dateFrom: '',
     dateTo: ''
   })
-  const [useTestData, setUseTestData] = useState(true) // テストデータ使用フラグ
+  const [useTestData, setUseTestData] = useState(false) // 本番データを使用
   const { user, profile, loading: authLoading } = useAuth()
 
   useEffect(() => {
