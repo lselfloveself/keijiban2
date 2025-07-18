@@ -138,6 +138,14 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
               @{getDisplayName().toLowerCase().replace(/\s+/g, '') || 'anonymous'}
             </span>
             <span className="text-gray-400">·</span>
+            <span className="text-gray-500 text-xs bg-gray-100 px-2 py-1 rounded-md">
+              {diary.created_at && new Date(diary.created_at).toLocaleDateString('ja-JP', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+              })}
+            </span>
+            <span className="text-gray-400">·</span>
             <span className="text-gray-400 text-xs">
               {diary.created_at && formatDistanceToNow(new Date(diary.created_at), { 
                 addSuffix: true, 
