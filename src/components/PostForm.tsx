@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Send, Image, Smile } from 'lucide-react'
+import { Send, Image } from 'lucide-react'
 import { Database } from '../lib/supabase'
 import { useAuth } from '../hooks/useAuth'
 import ElegantHeart from './ElegantHeart'
@@ -13,21 +13,9 @@ interface PostFormProps {
 const PostForm: React.FC<PostFormProps> = ({ onPost }) => {
   const [content, setContent] = useState('')
   const [nickname, setNickname] = useState('')
-  const [emotion, setEmotion] = useState('')
   const [isAnonymous, setIsAnonymous] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { user, profile } = useAuth()
-
-  const emotions = [
-    { emoji: '😊', label: '嬉しい' },
-    { emoji: '😢', label: '悲しい' },
-    { emoji: '😡', label: '怒り' },
-    { emoji: '😴', label: '疲れた' },
-    { emoji: '😰', label: '不安' },
-    { emoji: '😍', label: '感動' },
-    { emoji: '🤔', label: '考え中' },
-    { emoji: '😌', label: '穏やか' }
-  ]
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -39,7 +27,7 @@ const PostForm: React.FC<PostFormProps> = ({ onPost }) => {
         user_id: user?.id || 'anonymous-user',
         nickname: isAnonymous ? null : (nickname.trim() || profile?.display_name || null),
         content: content.trim(),
-        emotion: emotion || null,
+        emotion: null,
         is_public: true
       }
 
@@ -48,7 +36,6 @@ const PostForm: React.FC<PostFormProps> = ({ onPost }) => {
       // フォームをリセット
       setContent('')
       setNickname('')
-      setEmotion('')
       setIsAnonymous(false)
     } catch (error) {
       console.error('Error posting:', error)
@@ -110,30 +97,6 @@ const PostForm: React.FC<PostFormProps> = ({ onPost }) => {
                 />
               </div>
 
-              {/* 感情選択 */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  今の気分
-                </label>
-                <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
-                  {emotions.map((emo) => (
-                    <button
-                      key={emo.emoji}
-                      type="button"
-                      onClick={() => setEmotion(emotion === emo.emoji ? '' : emo.emoji)}
-                      className={`p-3 text-xl rounded-lg border-2 transition-all hover:scale-105 ${
-                        emotion === emo.emoji
-                          ? 'border-blue-500 bg-blue-50 scale-105'
-                          : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                      }`}
-                      title={emo.label}
-                    >
-                      {emo.emoji}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
               {/* 投稿ボタン */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3 text-gray-500">
@@ -144,14 +107,6 @@ const PostForm: React.FC<PostFormProps> = ({ onPost }) => {
                     disabled
                   >
                     <Image className="w-5 h-5" />
-                  </button>
-                  <button
-                    type="button"
-                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                    title="絵文字を追加"
-                    disabled
-                  >
-                    <Smile className="w-5 h-5" />
                   </button>
                 </div>
                 

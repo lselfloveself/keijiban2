@@ -13,17 +13,14 @@ interface EditDiaryModalProps {
 const EditDiaryModal: React.FC<EditDiaryModalProps> = ({ diary, onSave, onClose }) => {
   const [content, setContent] = useState(diary.content || '')
   const [nickname, setNickname] = useState(diary.nickname || '')
-  const [emotion, setEmotion] = useState(diary.emotion || '')
   const [isAnonymous, setIsAnonymous] = useState(!diary.nickname)
-
-  const emotions = ['😊', '😢', '😡', '😴', '😰', '😍']
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     onSave({
       content: content.trim(),
       nickname: isAnonymous ? null : nickname.trim() || null,
-      emotion: emotion || null
+      emotion: null
     })
   }
 
@@ -86,29 +83,6 @@ const EditDiaryModal: React.FC<EditDiaryModalProps> = ({ diary, onSave, onClose 
                 className="form-input disabled:bg-gray-50 disabled:text-gray-500"
                 placeholder="表示名を入力..."
               />
-            </div>
-
-            {/* Emotion */}
-            <div>
-              <label className="block text-sm font-medium text-black mb-3">
-                気分
-              </label>
-              <div className="grid grid-cols-6 gap-3">
-                {emotions.map((emo) => (
-                  <button
-                    key={emo}
-                    type="button"
-                    onClick={() => setEmotion(emotion === emo ? '' : emo)}
-                    className={`p-3 text-2xl rounded-xl border-2 transition-all hover:scale-105 ${
-                      emotion === emo
-                        ? 'border-blue-500 bg-blue-50 scale-105'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    {emo}
-                  </button>
-                ))}
-              </div>
             </div>
 
             {/* Actions */}

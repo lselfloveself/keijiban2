@@ -16,7 +16,7 @@ const mockDiaries: DiaryEntry[] = [
     user_id: 'test-user-1',
     nickname: '太郎',
     content: '今日は久しぶりに友達と会えて本当に楽しかった！カフェで3時間も話し込んでしまった。やっぱり直接会って話すのは全然違うなあ。明日からまた頑張ろう！',
-    emotion: '😊',
+    emotion: null,
     created_at: new Date(Date.now() - 1000 * 60 * 30).toISOString(), // 30分前
     is_public: true
   },
@@ -25,7 +25,7 @@ const mockDiaries: DiaryEntry[] = [
     user_id: 'test-user-2',
     nickname: null, // 匿名
     content: '最近仕事が忙しすぎて疲れが取れない...。でも新しいプロジェクトが始まるから頑張らないと。早く慣れるといいな。',
-    emotion: '😴',
+    emotion: null,
     created_at: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(), // 2時間前
     is_public: true
   },
@@ -34,7 +34,7 @@ const mockDiaries: DiaryEntry[] = [
     user_id: 'test-user-3',
     nickname: 'みかん',
     content: '映画館で見た新作アニメが最高だった！！！\n\n作画も音楽も声優さんの演技も全部完璧で、途中で泣いちゃった😭\n\n原作ファンとしても大満足です。みんなにもおすすめしたい！',
-    emotion: '😍',
+    emotion: null,
     created_at: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString(), // 5時間前
     is_public: true
   },
@@ -43,7 +43,7 @@ const mockDiaries: DiaryEntry[] = [
     user_id: 'test-user-4',
     nickname: 'ゆうき',
     content: '電車で席を譲ろうとしたら断られてしまった。善意のつもりだったけど、相手の気持ちも考えないといけないなと反省。難しい...',
-    emotion: '😰',
+    emotion: null,
     created_at: new Date(Date.now() - 1000 * 60 * 60 * 8).toISOString(), // 8時間前
     is_public: true
   },
@@ -52,7 +52,7 @@ const mockDiaries: DiaryEntry[] = [
     user_id: 'test-user-5',
     nickname: null, // 匿名
     content: '今日は雨だったけど、家でゆっくり読書できて良い一日だった。久しぶりに小説を最後まで読み切れた。次は何を読もうかな？',
-    emotion: '😊',
+    emotion: null,
     created_at: new Date(Date.now() - 1000 * 60 * 60 * 12).toISOString(), // 12時間前
     is_public: true
   }

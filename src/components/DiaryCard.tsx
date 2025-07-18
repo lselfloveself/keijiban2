@@ -157,16 +157,6 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
             </p>
           </div>
 
-          {/* Emotion */}
-          {diary.emotion && (
-            <div className="mt-4">
-              <span className={`emotion-badge ${getEmotionColor(diary.emotion)}`}>
-                <span className="mr-1">{diary.emotion}</span>
-                <span>気づき</span>
-              </span>
-            </div>
-          )}
-
           {/* Actions */}
           <div className="flex items-center justify-between mt-6 max-w-md">
             <button 
