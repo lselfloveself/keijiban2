@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react'
+import { supabase } from '../lib/supabase'
+import type { User, Session } from '@supabase/supabase-js'
 
 export interface Profile {
   id: string
@@ -10,57 +12,101 @@ export interface Profile {
 }
 
 export const useAuth = () => {
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
-  const [session, setSession] = useState<any>(null)
-  const [loading, setLoading] = useState(false)
+  const [session, setSession] = useState<Session | null>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // 管理者ログイン状態をチェック
-    const adminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true'
-    const adminEmail = localStorage.getItem('adminEmail')
-
-    if (adminLoggedIn && adminEmail) {
-      // 管理者としてログイン
-      const adminUser = {
-        id: 'admin-user',
-        email: adminEmail
+    // 現在のセッションを取得
+    const getSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      setSession(session)
+      setUser(session?.user ?? null)
+      
+      if (session?.user) {
+        await fetchProfile(session.user.id)
       }
       
-      const adminProfile = {
-        id: 'admin-user',
-        email: adminEmail,
-        display_name: '管理者',
-        avatar_url: null,
-        is_admin: true,
-        created_at: new Date().toISOString()
-      }
-
-      setUser(adminUser)
-      setProfile(adminProfile)
-      setSession({ user: adminUser })
-    } else {
-      // 通常ユーザー（匿名）
-      const dummyUser = {
-        id: 'anonymous-user',
-        email: 'anonymous@example.com'
-      }
-      
-      const dummyProfile = {
-        id: 'anonymous-user',
-        email: 'anonymous@example.com',
-        display_name: 'テストユーザー',
-        avatar_url: null,
-        is_admin: false,
-        created_at: new Date().toISOString()
-      }
-
-      setUser(dummyUser)
-      setProfile(dummyProfile)
-      setSession({ user: dummyUser })
+      setLoading(false)
     }
-    setLoading(false)
+
+    getSession()
+
+    // 認証状態の変更を監視
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        setSession(session)
+        setUser(session?.user ?? null)
+        
+        if (session?.user) {
+          await fetchProfile(session.user.id)
+        } else {
+          setProfile(null)
+        }
+        
+        setLoading(false)
+      }
+    )
+
+    return () => subscription.unsubscribe()
   }, [])
+
+  const fetchProfile = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single()
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error fetching profile:', error)
+        return
+      }
+
+      if (data) {
+        setProfile(data)
+      } else {
+        // プロフィールが存在しない場合は作成
+        await createProfile(userId)
+      }
+    } catch (error) {
+      console.error('Error in fetchProfile:', error)
+    }
+  }
+
+  const createProfile = async (userId: string) => {
+    try {
+      const { data: userData } = await supabase.auth.getUser()
+      const user = userData.user
+      
+      if (!user) return
+
+      const newProfile = {
+        id: userId,
+        email: user.email,
+        display_name: user.user_metadata?.full_name || user.email?.split('@')[0] || '匿名',
+        avatar_url: user.user_metadata?.avatar_url || null,
+        is_admin: user.email === 'jin@namisapo.com', // 管理者判定
+      }
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .insert([newProfile])
+        .select()
+        .single()
+
+      if (error) {
+        console.error('Error creating profile:', error)
+        return
+      }
+
+      setProfile(data)
+    } catch (error) {
+      console.error('Error in createProfile:', error)
+    }
+  }
 
   const updateProfile = (updates: Partial<Profile>) => {
     if (profile) {
@@ -69,54 +115,60 @@ export const useAuth = () => {
   }
 
   const loginAsAdmin = () => {
-    const adminUser = {
-      id: 'admin-user',
-      email: 'jin@namisapo.com'
-    }
+    // 管理者ログイン状態をローカルストレージに保存
+    localStorage.setItem('adminLoggedIn', 'true')
+    localStorage.setItem('adminEmail', 'jin@namisapo.com')
     
-    const adminProfile = {
-      id: 'admin-user',
-      email: 'jin@namisapo.com',
-      display_name: '管理者',
-      avatar_url: null,
-      is_admin: true,
-      created_at: new Date().toISOString()
+    // 管理者プロフィールを設定
+    if (profile) {
+      setProfile({ ...profile, is_admin: true })
     }
-
-    setUser(adminUser)
-    setProfile(adminProfile)
-    setSession({ user: adminUser })
   }
 
   const logout = () => {
+    // 管理者ログイン状態をクリア
     localStorage.removeItem('adminLoggedIn')
     localStorage.removeItem('adminEmail')
     
-    // 通常ユーザーに戻す
-    const dummyUser = {
-      id: 'anonymous-user',
-      email: 'anonymous@example.com'
+    // 管理者フラグをリセット
+    if (profile) {
+      setProfile({ ...profile, is_admin: false })
     }
-    
-    const dummyProfile = {
-      id: 'anonymous-user',
-      email: 'anonymous@example.com',
-      display_name: 'テストユーザー',
-      avatar_url: null,
-      is_admin: false,
-      created_at: new Date().toISOString()
-    }
-
-    setUser(dummyUser)
-    setProfile(dummyProfile)
-    setSession({ user: dummyUser })
   }
+
   const signInWithGoogle = async () => {
-    // 何もしない（削除済み）
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin
+        }
+      })
+      
+      if (error) {
+        console.error('Error signing in with Google:', error)
+        throw error
+      }
+    } catch (error) {
+      console.error('Google sign in error:', error)
+      throw error
+    }
   }
 
   const signOut = async () => {
-    logout()
+    try {
+      const { error } = await supabase.auth.signOut()
+      if (error) {
+        console.error('Error signing out:', error)
+        throw error
+      }
+      
+      // ローカル状態もクリア
+      logout()
+    } catch (error) {
+      console.error('Sign out error:', error)
+      throw error
+    }
   }
 
   return {

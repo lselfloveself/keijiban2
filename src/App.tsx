@@ -262,6 +262,11 @@ const BoardPage: React.FC = () => {
   }
 
   const handleNewPost = (postData: Omit<DiaryEntry, 'id' | 'created_at'>) => {
+    if (!user) {
+      alert('日記を投稿するにはログインが必要です')
+      return
+    }
+
     // 新しい投稿を作成
     const newPost: DiaryEntry = {
       id: `post-${Date.now()}`,
@@ -279,8 +284,6 @@ const BoardPage: React.FC = () => {
       setDiaries(prev => [newPost, ...prev])
       setFilteredDiaries(prev => [newPost, ...prev])
     }
-
-    setShowPostForm(false)
   }
 
   const handleRefresh = () => {

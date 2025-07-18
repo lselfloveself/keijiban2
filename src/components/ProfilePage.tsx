@@ -15,6 +15,34 @@ interface ProfilePageProps {
 
 const ProfilePage: React.FC<ProfilePageProps> = ({ onClose, onNewPost }) => {
   const { user, profile } = useAuth()
+
+  // ログインしていない場合はログインを促す
+  if (!user) {
+    return (
+      <div className="modal-overlay">
+        <div className="bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 rounded-2xl max-w-md w-full shadow-2xl border border-purple-200">
+          <div className="p-8 text-center">
+            <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
+              <User className="w-8 h-8 text-white" />
+            </div>
+            <h2 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
+              ログインが必要です
+            </h2>
+            <p className="text-gray-600 mb-6 font-medium">
+              プロフィール設定や日記投稿を行うには、Googleアカウントでログインしてください。
+            </p>
+            <button
+              onClick={onClose}
+              className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
+              閉じる
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   const [displayName, setDisplayName] = useState('')
   const [bio, setBio] = useState('')
   const [website, setWebsite] = useState('')
