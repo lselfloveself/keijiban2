@@ -120,7 +120,7 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
 
   const handleShare = () => {
     const diaryUrl = `${window.location.origin}/diary/${diary.id}`
-    const shareText = `${getDisplayName()}さんの日記\n\n${diary.content?.substring(0, 100)}${diary.content && diary.content.length > 100 ? '...' : ''}\n\n#かんじょうにっき掲示板`
+    const shareText = `${getDisplayName()}さんの日記 📖\n\n${diary.content?.substring(0, 120)}${diary.content && diary.content.length > 120 ? '...' : ''}\n\n✨ みんなの日記で感情を共有しよう\n#かんじょうにっき掲示板 #日記 #感情日記`
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(diaryUrl)}`
     
     window.open(twitterUrl, '_blank', 'width=550,height=420')
