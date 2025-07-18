@@ -22,9 +22,10 @@ const getRandomHeartColor = () => {
 
 interface HeaderProps {
   onAdminClick?: () => void
+  onProfileClick?: () => void
 }
 
-const Header: React.FC<HeaderProps> = ({ onAdminClick }) => {
+const Header: React.FC<HeaderProps> = ({ onAdminClick, onProfileClick }) => {
   const { user, profile } = useAuth()
   const [showMobileMenu, setShowMobileMenu] = useState(false)
 
@@ -47,7 +48,10 @@ const Header: React.FC<HeaderProps> = ({ onAdminClick }) => {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-4">
-            <div className="flex items-center space-x-3 bg-gray-50 rounded-xl px-4 py-2">
+            <button
+              onClick={onProfileClick}
+              className="flex items-center space-x-3 bg-gray-50 rounded-xl px-4 py-2 hover:bg-gray-100 transition-colors"
+            >
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-white to-gray-50 border border-gray-200 flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-200">
                 <ElegantHeart className={getRandomHeartColor()} size="md" />
               </div>
@@ -64,7 +68,7 @@ const Header: React.FC<HeaderProps> = ({ onAdminClick }) => {
                   @{profile?.display_name?.toLowerCase().replace(/\s+/g, '') || 'anonymous'}
                 </span>
               </div>
-            </div>
+            </button>
             
             {profile?.is_admin && (
               <button
@@ -121,7 +125,13 @@ const Header: React.FC<HeaderProps> = ({ onAdminClick }) => {
                 <span>管理者ログイン</span>
               </button>
               
-              <div className="flex items-center space-x-3 px-4">
+              <button
+                onClick={() => {
+                  onProfileClick?.()
+                  setShowMobileMenu(false)
+                }}
+                className="flex items-center space-x-3 px-4 py-2 hover:bg-gray-50 rounded-xl transition-colors w-full text-left"
+              >
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-white to-gray-50 border border-gray-200 flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-200">
                   <ElegantHeart className={getRandomHeartColor()} size="md" />
                 </div>
@@ -138,7 +148,7 @@ const Header: React.FC<HeaderProps> = ({ onAdminClick }) => {
                     @{profile?.display_name?.toLowerCase().replace(/\s+/g, '') || 'anonymous'}
                   </span>
                 </div>
-              </div>
+              </button>
               
               {profile?.is_admin && (
                 <button

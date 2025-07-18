@@ -25,7 +25,7 @@ export const useAuth = () => {
     const dummyProfile = {
       id: 'anonymous-user',
       email: 'anonymous@example.com',
-      display_name: '匿名ユーザー',
+      display_name: 'テストユーザー',
       avatar_url: null,
       is_admin: false,
       created_at: new Date().toISOString()
@@ -37,6 +37,11 @@ export const useAuth = () => {
     setLoading(false)
   }, [])
 
+  const updateProfile = (updates: Partial<Profile>) => {
+    if (profile) {
+      setProfile({ ...profile, ...updates })
+    }
+  }
   const signInWithGoogle = async () => {
     // 何もしない（削除済み）
   }
@@ -50,6 +55,7 @@ export const useAuth = () => {
     profile,
     session,
     loading,
+    updateProfile,
     signInWithGoogle,
     signOut
   }

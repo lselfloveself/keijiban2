@@ -4,6 +4,7 @@ import Header from './components/Header'
 import DiaryCard from './components/DiaryCard'
 import PostForm from './components/PostForm'
 import AdminPanel from './components/AdminPanel'
+import ProfilePage from './components/ProfilePage'
 import { useAuth } from './hooks/useAuth'
 import { supabase, Database } from './lib/supabase'
 
@@ -63,6 +64,7 @@ function App() {
   const [refreshing, setRefreshing] = useState(false)
   const [showAdminPanel, setShowAdminPanel] = useState(false)
   const [showPostForm, setShowPostForm] = useState(false)
+  const [showProfilePage, setShowProfilePage] = useState(false)
   const [useTestData, setUseTestData] = useState(true) // テストデータ使用フラグ
   const { user, profile, loading: authLoading } = useAuth()
 
@@ -194,7 +196,10 @@ function App() {
 
   return (
     <div className="main-layout">
-      <Header onAdminClick={() => setShowAdminPanel(true)} />
+      <Header 
+        onAdminClick={() => setShowAdminPanel(true)}
+        onProfileClick={() => setShowProfilePage(true)}
+      />
       
       <main className="content-container">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -286,6 +291,11 @@ function App() {
       {/* Admin Panel */}
       {showAdminPanel && (
         <AdminPanel onClose={() => setShowAdminPanel(false)} />
+      )}
+
+      {/* Profile Page */}
+      {showProfilePage && (
+        <ProfilePage onClose={() => setShowProfilePage(false)} />
       )}
     </div>
   )
