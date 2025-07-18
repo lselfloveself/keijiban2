@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import { Shield, Settings, Menu, X, ExternalLink, LogIn } from 'lucide-react'
+import { Shield, Settings, Menu, X, ExternalLink, LogIn, LogOut } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
+import AdminLogin from './AdminLogin'
 import ElegantHeart from './ElegantHeart'
 
 // ランダムなハートカラーを取得
@@ -26,11 +27,24 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ onAdminClick, onProfileClick }) => {
-  const { user, profile } = useAuth()
+  const { user, profile, loginAsAdmin, logout } = useAuth()
   const [showMobileMenu, setShowMobileMenu] = useState(false)
+  const [showAdminLogin, setShowAdminLogin] = useState(false)
 
+  const handleAdminLogin = (isAdmin: boolean) => {
+    if (isAdmin) {
+      loginAsAdmin()
+      setShowAdminLogin(false)
+    }
+  }
+
+  const handleLogout = () => {
+    logout()
+    setShowMobileMenu(false)
+  }
   return (
-    <header className="bg-gradient-to-r from-white/95 to-purple-50/95 backdrop-blur-md border-b-2 border-purple-200/50 sticky top-0 z-40 shadow-xl">
+    <>
+      <header className="bg-gradient-to-r from-white/95 to-purple-50/95 backdrop-blur-md border-b-2 border-purple-200/50 sticky top-0 z-40 shadow-xl">
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -113,17 +127,26 @@ const Header: React.FC<HeaderProps> = ({ onAdminClick, onProfileClick }) => {
               </a>
               
               {/* 管理者ログイン */}
-              <button
-                onClick={() => {
-                  // 管理者ログイン機能は後で実装
-                  alert('管理者ログイン機能は準備中です')
-                  setShowMobileMenu(false)
-                }}
-                className="nav-item w-full text-left"
-              >
-                <LogIn className="w-5 h-5" />
-                <span>管理者ログイン</span>
-              </button>
+              {profile?.is_admin ? (
+                <button
+                  onClick={handleLogout}
+                  className="nav-item w-full text-left"
+                >
+                  <LogOut className="w-5 h-5" />
+                  <span>ログアウト</span>
+                </button>
+              ) : (
+                <button
+                  onClick={() => {
+                    setShowAdminLogin(true)
+                    setShowMobileMenu(false)
+                  }}
+                  className="nav-item w-full text-left"
+                >
+                  <LogIn className="w-5 h-5" />
+                  <span>管理者ログイン</span>
+                </button>
+              )}
               
               <button
                 onClick={() => {
@@ -162,11 +185,38 @@ const Header: React.FC<HeaderProps> = ({ onAdminClick, onProfileClick }) => {
                   <span>管理画面</span>
                 </button>
               )}
+              
+              {profile?.is_admin ? (
+                <button
+                  onClick={logout}
+                  className="flex items-center space-x-2 px-4 py-2 text-red-600 hover:text-red-800 hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span className="text-sm">ログアウト</span>
+                </button>
+              ) : (
+                <button
+                  onClick={() => setShowAdminLogin(true)}
+                  className="flex items-center space-x-2 px-4 py-2 text-blue-600 hover:text-blue-800 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                >
+                  <LogIn className="w-4 h-4" />
+                  <span className="text-sm">管理者ログイン</span>
+                </button>
+              )}
             </div>
           </div>
         )}
       </div>
-    </header>
+      </header>
+
+      {/* Admin Login Modal */}
+      {showAdminLogin && (
+        <AdminLogin
+          onLogin={handleAdminLogin}
+          onClose={() => setShowAdminLogin(false)}
+        />
+      )}
+    </>
   )
 }
 
